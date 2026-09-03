@@ -4,6 +4,12 @@ import type { Papel } from "@/lib/types";
 
 const AUTH_PAGES = ["/login", "/cadastro"];
 
+// RF07-CA1 — enquanto persona é nula, /corredor/painel e qualquer rota de
+// pilar redirecionam pro início da avaliação. Estas duas rotas são a
+// exceção: é pra elas que o redirecionamento aponta, e a conta ainda
+// precisa funcionar (perfil/logout) mesmo sem persona definida.
+const ROTAS_CORREDOR_SEM_PERSONA = ["/corredor/comecar", "/corredor/perfil"];
+
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -50,6 +56,22 @@ export async function updateSession(request: NextRequest) {
     const url = request.nextUrl.clone();
     url.pathname = papel === "profissional" ? "/profissional/painel" : "/login";
     return NextResponse.redirect(url);
+  }
+
+  // RF07-CA1/CA3 — persona IS NULL bloqueia painel e qualquer pilar até o
+  // corredor passar pelo Passo 0 da avaliação (RF02). Persona não vive no
+  // JWT (não é decisão de segurança tamper-proof como app_metadata.papel —
+  // ver nota em claude/arquitetura-tecnica-global.md §5, "Definir persona"),
+  // por isso a checagem exige uma consulta extra, restrita às rotas que
+  // realmente precisam dela.
+  if (emAreaCorredor && user && papel === "corredor" && !ROTAS_CORREDOR_SEM_PERSONA.some((r) => pathname.startsWith(r))) {
+    const { data: perfil } = await supabase.from("usuarios").select("persona").eq("id", user.id).single();
+    if (!perfil?.persona) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/corredor/comecar";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
   }
 
   if (emAreaProfissional && papel !== "profissional") {

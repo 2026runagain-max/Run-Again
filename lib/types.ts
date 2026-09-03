@@ -15,4 +15,5 @@ export type Especialidade =
 export interface Sessao {
   nome: string;
   papel: Papel;
+  persona: Persona | null;
 }

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Papel, Sessao } from "@/lib/types";
+import type { Papel, Persona, Sessao } from "@/lib/types";
 
 export async function getSessao(): Promise<Sessao | null> {
   const supabase = await createClient();
@@ -14,12 +14,13 @@ export async function getSessao(): Promise<Sessao | null> {
 
   const { data: perfil } = await supabase
     .from("usuarios")
-    .select("nome")
+    .select("nome, persona")
     .eq("id", user.id)
     .single();
 
   return {
     nome: perfil?.nome ?? user.email ?? "Você",
     papel,
+    persona: (perfil?.persona as Persona | null) ?? null,
   };
 }
