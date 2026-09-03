@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+:root {
+  --fire: #E8470A;
+  --fire-dim: #E8470A18;
+  --ink: #0A0A0A;
+  --ink2: #1A1A1A;
+  --ink3: #242424;
+  --mid: #6B6B6B;
+  --silver: #C8C8C8;
+  --smoke: #F0EFED;
+  --paper: #FAFAF8;
+  --white: #FFFFFF;
+}
+
+@theme inline {
+  --color-fire: var(--fire);
+  --color-fire-dim: var(--fire-dim);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink2);
+  --color-ink-3: var(--ink3);
+  --color-mid: var(--mid);
+  --color-silver: var(--silver);
+  --color-smoke: var(--smoke);
+  --color-paper: var(--paper);
+  --color-white: var(--white);
+
+  --font-display: var(--font-bebas-neue);
+  --font-sans: var(--font-inter);
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display), sans-serif;
+  letter-spacing: 0.01em;
+}
