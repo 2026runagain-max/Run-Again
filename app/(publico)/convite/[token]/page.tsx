@@ -3,6 +3,8 @@ import { AuthShell } from "@/components/layout/AuthShell";
 import { DefinirSenhaForm } from "@/components/auth/DefinirSenhaForm";
 import { ErrorState } from "@/components/estados/ErrorState";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { labelEspecialidade } from "@/lib/labels";
+import type { Especialidade } from "@/lib/types";
 
 export const metadata: Metadata = { title: "Aceitar convite — Run Again" };
 
@@ -16,7 +18,7 @@ export default async function ConvitePage({
 
   const { data: convite } = await admin
     .from("convites_profissional")
-    .select("token, nome, usado_em, expira_em")
+    .select("token, nome, especialidade, usado_em, expira_em")
     .eq("token", token)
     .maybeSingle();
 
@@ -24,9 +26,13 @@ export default async function ConvitePage({
     !!convite && !convite.usado_em && new Date(convite.expira_em) > new Date();
 
   return (
-    <AuthShell titulo="DEFINIR SENHA">
+    <AuthShell eyebrow="EQUIPE RUN AGAIN" titulo="DEFINIR SENHA">
       {valido ? (
-        <DefinirSenhaForm token={token} nome={convite.nome} />
+        <DefinirSenhaForm
+          token={token}
+          nome={convite.nome}
+          especialidade={labelEspecialidade[convite.especialidade as Especialidade]}
+        />
       ) : (
         <ErrorState
           titulo="Esse convite não é mais válido."

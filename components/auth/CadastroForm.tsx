@@ -116,24 +116,24 @@ export function CadastroForm() {
         />
         <span>
           Li e aceito os{" "}
-          <Link href="/termos" className="text-fire hover:underline">
+          <Link href="/termos" className="text-fire-text hover:underline">
             termos de uso
           </Link>{" "}
           e a{" "}
-          <Link href="/privacidade" className="text-fire hover:underline">
+          <Link href="/privacidade" className="text-fire-text hover:underline">
             política de privacidade
           </Link>
           .
         </span>
       </label>
       {erros.termosAceitos && (
-        <p className="-mt-2 text-xs font-sans text-fire" role="alert">
+        <p className="-mt-2 text-xs font-sans text-fire-text" role="alert">
           {erros.termosAceitos}
         </p>
       )}
 
       {erroGeral && (
-        <p className="text-sm font-sans text-fire" role="alert">
+        <p className="text-sm font-sans text-fire-text" role="alert">
           {erroGeral}
         </p>
       )}
@@ -144,7 +144,7 @@ export function CadastroForm() {
 
       <p className="text-center text-sm font-sans text-mid">
         Já tem conta?{" "}
-        <Link href="/login" className="font-semibold text-fire hover:underline">
+        <Link href="/login" className="font-semibold text-fire-text hover:underline">
           Entrar
         </Link>
       </p>

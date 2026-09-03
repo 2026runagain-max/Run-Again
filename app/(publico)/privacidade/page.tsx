@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Política de Privacidade — Run Aga
 export default function PrivacidadePage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
-      <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire">
+      <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire-text">
         PRIVACIDADE
       </p>
       <h1 className="mt-2 font-display text-4xl text-ink">Política de Privacidade</h1>

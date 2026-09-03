@@ -41,9 +41,12 @@ export function Header({ area, sessao }: HeaderProps) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={ativo ? "page" : undefined}
                 className={cn(
-                  "text-sm font-semibold font-sans transition-colors hover:text-fire",
-                  ativo ? "text-fire underline underline-offset-4" : "text-ink",
+                  "text-sm font-sans transition-colors hover:text-fire-text",
+                  ativo
+                    ? "font-bold text-ink underline decoration-fire decoration-2 underline-offset-8"
+                    : "font-semibold text-ink",
                 )}
               >
                 {item.label}
@@ -157,9 +160,10 @@ export function Header({ area, sessao }: HeaderProps) {
                     key={item.href}
                     href={item.href}
                     onClick={() => setMenuAberto(false)}
+                    aria-current={ativo ? "page" : undefined}
                     className={cn(
-                      "text-base font-semibold font-sans",
-                      ativo ? "text-fire" : "text-ink",
+                      "border-l-2 pl-3 text-base font-sans text-ink",
+                      ativo ? "border-fire font-bold" : "border-transparent font-semibold",
                     )}
                   >
                     {item.label}

@@ -130,7 +130,7 @@ export function RedefinirSenhaForm() {
       />
 
       {erroGeral && (
-        <p className="text-sm font-sans text-fire" role="alert">
+        <p className="text-sm font-sans text-fire-text" role="alert">
           {erroGeral}
         </p>
       )}

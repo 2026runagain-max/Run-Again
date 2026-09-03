@@ -28,10 +28,10 @@ export function Footer() {
           </nav>
         </div>
 
-        <p className="text-xs font-sans text-mid">
+        <p className="text-xs font-sans text-silver/70">
           Você está usando a versão beta do Run Again.
         </p>
-        <p className="text-xs font-sans text-mid">
+        <p className="text-xs font-sans text-silver/70">
           © {ano} Run Again. Todos os direitos reservados.
         </p>
       </div>

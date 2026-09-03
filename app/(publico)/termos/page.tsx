@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Termos de Uso — Run Again" };
 export default function TermosPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
-      <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire">
+      <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire-text">
         TERMOS DE USO
       </p>
       <h1 className="mt-2 font-display text-4xl text-ink">Termos de Uso</h1>

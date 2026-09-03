@@ -10,7 +10,7 @@ export default async function PainelProfissionalPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire">
+        <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire-text">
           EQUIPE RUN AGAIN
         </p>
         <h1 className="mt-1 font-display text-3xl text-ink">

@@ -19,40 +19,47 @@ export default async function PerfilCorredorPage() {
     <div className="flex max-w-xl flex-col gap-6">
       <h1 className="font-display text-3xl text-ink">PERFIL</h1>
 
-      <Card variant="pillar" className="flex flex-col gap-4">
-        <div>
-          <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
-            Nome
-          </p>
-          <p className="font-sans text-ink">{perfil?.nome}</p>
-        </div>
-        <div>
-          <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
-            E-mail
-          </p>
-          <p className="font-sans text-ink">{perfil?.email}</p>
-        </div>
-        <div>
-          <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
-            Persona
-          </p>
-          <p className="font-sans text-ink">
-            {perfil?.persona
-              ? labelPersona[perfil.persona]
-              : "Ainda não identificada — chega no onboarding."}
-          </p>
-        </div>
-        <div>
-          <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
-            Acesso de beta
-          </p>
-          <p className="font-sans text-ink">
-            {dias !== null
-              ? `${dias} ${dias === 1 ? "dia restante" : "dias restantes"}`
-              : "—"}
-          </p>
-        </div>
-      </Card>
+      <div className="flex flex-col gap-4 sm:flex-row">
+        {dias !== null && (
+          <Card
+            variant="pillar"
+            className="flex shrink-0 flex-col items-center gap-1 p-6 text-center sm:w-44"
+          >
+            <p className="font-display text-5xl leading-none text-fire">{dias}</p>
+            <p className="mt-2 text-xs font-sans font-semibold uppercase tracking-wide text-mid">
+              {dias === 1 ? "dia restante de beta" : "dias restantes de beta"}
+            </p>
+            <p className="mt-1 text-xs font-sans text-mid">
+              Sem cobrança em nenhum deles.
+            </p>
+          </Card>
+        )}
+
+        <Card variant="pillar" className="flex flex-1 flex-col gap-4">
+          <div>
+            <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
+              Nome
+            </p>
+            <p className="font-sans text-ink">{perfil?.nome}</p>
+          </div>
+          <div>
+            <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
+              E-mail
+            </p>
+            <p className="font-sans text-ink">{perfil?.email}</p>
+          </div>
+          <div>
+            <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
+              Persona
+            </p>
+            <p className="font-sans text-ink">
+              {perfil?.persona
+                ? labelPersona[perfil.persona]
+                : "Ainda não identificada — o onboarding cuida disso."}
+            </p>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

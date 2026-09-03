@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
 
 export interface ErrorStateProps {
@@ -38,11 +39,9 @@ export function ErrorState({
   const d = defaults[variant];
 
   return (
-    <div
-      className={cn(
-        "mx-auto max-w-md rounded-2xl border border-fire/25 bg-fire-dim p-8 text-center",
-        className,
-      )}
+    <Card
+      variant="insight"
+      className={cn("mx-auto max-w-md p-8 text-center", className)}
       role="alert"
     >
       <h2
@@ -66,6 +65,6 @@ export function ErrorState({
           {ctaLabel ?? d.ctaLabel}
         </Button>
       )}
-    </div>
+    </Card>
   );
 }

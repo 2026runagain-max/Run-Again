@@ -20,7 +20,7 @@ export function AuthShell({
   return (
     <main className="flex flex-1 items-center justify-center bg-ink px-4 py-16">
       <div className="w-full max-w-md rounded-2xl bg-paper p-8 shadow-2xl sm:p-10">
-        <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire">
+        <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire-text">
           {eyebrow}
         </p>
         <h1 className="mt-2 font-display text-3xl text-ink">{titulo}</h1>

@@ -8,6 +8,7 @@ export const tokens = {
   color: {
     fire: "#E8470A",
     fireDim: "#E8470A18",
+    fireText: "#C43C08",
     ink: "#0A0A0A",
     ink2: "#1A1A1A",
     ink3: "#242424",

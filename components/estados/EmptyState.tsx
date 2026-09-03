@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import { cn } from "@/lib/cn";
 
 export interface EmptyStateProps {
@@ -19,12 +20,7 @@ export function EmptyState({
   className,
 }: EmptyStateProps) {
   return (
-    <div
-      className={cn(
-        "rounded-[14px] border-b-[3px] border-fire bg-white p-8 text-center shadow-sm",
-        className,
-      )}
-    >
+    <Card variant="pillar" className={cn("p-8 text-center", className)}>
       <h2 className="text-lg font-extrabold font-sans text-ink">{titulo}</h2>
       <p className="mt-2 font-sans text-sm text-mid">{subtitulo}</p>
       {(onCta || ctaHref) && (
@@ -37,6 +33,6 @@ export function EmptyState({
           {ctaLabel}
         </Button>
       )}
-    </div>
+    </Card>
   );
 }

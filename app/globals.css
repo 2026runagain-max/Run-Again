@@ -3,6 +3,11 @@
 :root {
   --fire: #E8470A;
   --fire-dim: #E8470A18;
+  /* Mesmo matiz do --fire, escurecido para 4.5:1+ em texto pequeno sobre
+     --paper/--white (o --fire puro mede 3.8~3.9:1 e falha WCAG AA como
+     texto). Nunca usar --fire como cor de texto sobre fundo claro — só
+     como fundo, borda, ícone ou texto grande/display, ou sobre --ink. */
+  --fire-text: #C43C08;
   --ink: #0A0A0A;
   --ink2: #1A1A1A;
   --ink3: #242424;
@@ -16,6 +21,7 @@
 @theme inline {
   --color-fire: var(--fire);
   --color-fire-dim: var(--fire-dim);
+  --color-fire-text: var(--fire-text);
   --color-ink: var(--ink);
   --color-ink-2: var(--ink2);
   --color-ink-3: var(--ink3);

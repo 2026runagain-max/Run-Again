@@ -90,14 +90,14 @@ export function LoginForm() {
       <div className="-mt-2 text-right">
         <Link
           href="/recuperar-senha"
-          className="text-sm font-sans text-fire hover:underline"
+          className="text-sm font-sans text-fire-text hover:underline"
         >
           Esqueci minha senha
         </Link>
       </div>
 
       {erroGeral && (
-        <p className="text-sm font-sans text-fire" role="alert">
+        <p className="text-sm font-sans text-fire-text" role="alert">
           {erroGeral}
         </p>
       )}
@@ -108,7 +108,7 @@ export function LoginForm() {
 
       <p className="text-center text-sm font-sans text-mid">
         Ainda não tem conta?{" "}
-        <Link href="/cadastro" className="font-semibold text-fire hover:underline">
+        <Link href="/cadastro" className="font-semibold text-fire-text hover:underline">
           Criar conta
         </Link>
       </p>

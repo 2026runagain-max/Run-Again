@@ -8,6 +8,7 @@ Fonte única de verdade para cor, tipografia e componentes base do produto. Nenh
 |---|---|---|
 | `--fire` | `#E8470A` | Accent. CTA primário, item ativo, número em destaque. Nunca fundo de texto corrido. |
 | `--fire-dim` | `#E8470A18` (fire a 9.4% opacidade) | Fundo de badge/insight block sobre `--fire`. |
+| `--fire-text` | `#C43C08` | Mesmo matiz do `--fire`, escurecido para passar 4.5:1+ em texto pequeno sobre `--paper`/`--white`. Ver "Gap registrado" abaixo. |
 | `--ink` | `#0A0A0A` | Texto principal sobre fundo claro. Fundo de rodapé e telas de auth. |
 | `--ink2` | `#1A1A1A` | Fundo secundário escuro (cards sobre `--ink`). |
 | `--ink3` | `#242424` | Fundo terciário escuro (hover sobre `--ink2`). |
@@ -20,6 +21,8 @@ Fonte única de verdade para cor, tipografia e componentes base do produto. Nenh
 **Gap registrado:** o sistema não define vermelho de erro nem verde de sucesso. Decisão adotada — não introduzir cor nova:
 - **Erro** usa `--fire` (já é a cor de alerta/urgência da marca).
 - **Sucesso** não usa cor própria: ícone de check + tipografia padrão (`--ink` / `--mid`). `--fire` fica reservado a erro/accent.
+
+**Gap de contraste registrado:** medindo o par real, `--fire` como cor de **texto** sobre `--paper`/`--white` fica em 3.8–3.9:1 — abaixo do mínimo WCAG AA (4.5:1) para texto normal. `--fire` continua livre para fundo, borda, ícone, texto grande (≥ 24px ou ≥ 19px em negrito) e qualquer texto sobre `--ink` (aí passa em 5:1+). Para texto pequeno/normal sobre fundo claro, usar `--fire-text`.
 
 ## Tipografia
 

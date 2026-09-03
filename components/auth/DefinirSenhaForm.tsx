@@ -11,9 +11,10 @@ import { definirSenhaConviteSchema } from "@/lib/validation/auth";
 export interface DefinirSenhaFormProps {
   token: string;
   nome: string;
+  especialidade: string;
 }
 
-export function DefinirSenhaForm({ token, nome }: DefinirSenhaFormProps) {
+export function DefinirSenhaForm({ token, nome, especialidade }: DefinirSenhaFormProps) {
   const router = useRouter();
   const [carregando, setCarregando] = useState(false);
   const [erroGeral, setErroGeral] = useState<string | null>(null);
@@ -85,8 +86,9 @@ export function DefinirSenhaForm({ token, nome }: DefinirSenhaFormProps) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
       <p className="text-sm font-sans text-mid">
-        Olá, <span className="font-semibold text-ink">{nome}</span>. Define sua senha
-        para ativar a conta na Equipe Run Again.
+        Olá, <span className="font-semibold text-ink">{nome}</span>. Seu convite:{" "}
+        <span className="font-semibold text-ink">{especialidade}</span> na Equipe Run
+        Again. Define sua senha para ativar o acesso.
       </p>
 
       <Input
@@ -114,11 +116,11 @@ export function DefinirSenhaForm({ token, nome }: DefinirSenhaFormProps) {
         />
         <span>
           Li e aceito os{" "}
-          <Link href="/termos" className="text-fire hover:underline">
+          <Link href="/termos" className="text-fire-text hover:underline">
             termos de uso
           </Link>{" "}
           e a{" "}
-          <Link href="/privacidade" className="text-fire hover:underline">
+          <Link href="/privacidade" className="text-fire-text hover:underline">
             política de privacidade
           </Link>
           .
@@ -126,7 +128,7 @@ export function DefinirSenhaForm({ token, nome }: DefinirSenhaFormProps) {
       </label>
 
       {erroGeral && (
-        <p className="text-sm font-sans text-fire" role="alert">
+        <p className="text-sm font-sans text-fire-text" role="alert">
           {erroGeral}
         </p>
       )}

@@ -10,7 +10,7 @@ const variantClasses: Record<ButtonVariant, string> = {
   ghost:
     "border border-white/18 text-white hover:bg-white/10 focus-visible:ring-white disabled:text-white/40 disabled:border-white/10",
   "fire-ghost":
-    "bg-fire-dim border border-fire/30 text-fire hover:bg-fire/25 focus-visible:ring-fire disabled:opacity-40",
+    "bg-fire-dim border border-fire/30 text-fire-text hover:bg-fire/25 focus-visible:ring-fire disabled:opacity-40",
 };
 
 const baseClasses =

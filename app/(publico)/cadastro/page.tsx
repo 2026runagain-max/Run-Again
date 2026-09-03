@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Criar conta — Run Again" };
 
 export default function CadastroPage() {
   return (
-    <AuthShell titulo="CRIAR CONTA">
+    <AuthShell eyebrow="50 VAGAS DE BETA" titulo="CRIAR CONTA">
       <CadastroForm />
     </AuthShell>
   );
