@@ -57,7 +57,7 @@ export default async function PainelCorredorPage() {
       </div>
 
       {!diagnosticoPronto ? (
-        <PainelSemDiagnostico avaliacaoIniciada={!!avaliacao} />
+        <PainelSemDiagnostico avaliacaoIniciada={!!avaliacao} userId={user.id} />
       ) : (
         <PainelComDiagnostico userId={user.id} avaliacao={avaliacao} />
       )}
@@ -71,7 +71,7 @@ export default async function PainelCorredorPage() {
 // bem-estar ainda).
 // ---------------------------------------------------------------------------
 
-function PainelSemDiagnostico({ avaliacaoIniciada }: { avaliacaoIniciada: boolean }) {
+function PainelSemDiagnostico({ avaliacaoIniciada, userId }: { avaliacaoIniciada: boolean; userId: string }) {
   const copy = avaliacaoIniciada ? estados.vazioPainelAvaliacaoIncompleta : estados.vazioPainelSemDiagnostico;
 
   return (
@@ -92,7 +92,7 @@ function PainelSemDiagnostico({ avaliacaoIniciada }: { avaliacaoIniciada: boolea
         </Card>
       </Link>
 
-      <GradePilares />
+      <GradePilares userId={userId} />
     </div>
   );
 }
@@ -187,7 +187,7 @@ async function PainelComDiagnostico({
 
       <CardHistorico resultado={historicoResultado} />
 
-      <GradePilares />
+      <GradePilares userId={userId} />
     </div>
   );
 }

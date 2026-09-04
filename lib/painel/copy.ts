@@ -125,9 +125,11 @@ export const riscoCopy = {
 export const bemEstarCaption =
   "É a leitura do seu diagnóstico. Ela volta a mudar quando você responder de novo — não a cada sessão.";
 
+// "Nutrição esportiva" saiu desta lista — RF11 do PRD de Nutrição Esportiva
+// substitui esse placeholder por um card real assim que o corredor tem uma
+// orientação (N3 ou N4); ver components/painel/GradePilares.tsx.
 export const OUTROS_PILARES = [
   { nome: "Preparo físico" },
-  { nome: "Nutrição esportiva" },
   { nome: "Medicina do esporte" },
   { nome: "Psicologia do esporte" },
 ];

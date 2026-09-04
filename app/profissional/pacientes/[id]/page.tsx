@@ -51,6 +51,10 @@ export default async function ProntuarioPage({
         )}
       </div>
 
+      <Button href={`/profissional/pacientes/${id}/nutricao`} variant="fire-ghost" className="self-start">
+        Ver aba Nutrição Esportiva
+      </Button>
+
       {/* Card de continuidade — RF-B3 */}
       <Card variant="pillar" className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {aberto ? (
