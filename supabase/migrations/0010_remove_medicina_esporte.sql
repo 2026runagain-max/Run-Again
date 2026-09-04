@@ -5,6 +5,12 @@
 -- Fisioterapia, Preparação Física, Nutrição Esportiva, Psicologia do
 -- Esporte e Comunidade.
 --
+-- Nota de renumeração (QA do beta): este arquivo nasceu como 0007 — virou
+-- 0010 pra não colidir com 0007_psicologia_esportiva.sql quando os fluxos
+-- de nutrição/psicologia/comunidade (até então só locais) foram
+-- integrados. A ordem em si não importa: esta migration só adiciona CHECK
+-- constraints em tabelas de 0001, não depende de 0007/0008/0009.
+--
 -- Por que isto NÃO recria o enum `especialidade_profissional` sem o valor
 -- 'medicina_esporte':
 --   1. 0001_fundacao.sql (onde o enum nasce) muito provavelmente já está

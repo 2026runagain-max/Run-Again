@@ -2,6 +2,11 @@
 -- Estende 0001_fundacao.sql, 0002_fisioterapia_prescricao.sql e
 -- 0004_avaliacao_inicial.sql. Não repete nem recria nada de lá.
 --
+-- Nota de renumeração (QA do beta): este arquivo nasceu como 0006 — virou
+-- 0007 porque 0006 já estava ocupado por lista_fundadoras quando este fluxo
+-- (até então só local, nunca enviado ao repositório remoto) foi integrado.
+-- Nenhuma mudança de conteúdo, só de número de arquivo.
+--
 -- Fonte: PRD de arquitetura de produto "Nutrição Esportiva — Orientação
 -- Alimentar Calculada". Esse documento referencia
 -- claude/motor-nutricao-esportiva-especificacao.md como "fonte única de

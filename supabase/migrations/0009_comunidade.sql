@@ -1,6 +1,6 @@
 -- Run Again — Comunidade (Feed de Evidências + Espaço Único de Discussão)
 -- Estende 0001_fundacao.sql (usuarios, enums, eh_corredor/eh_profissional
--- vêm de 0003) e lê (sem gravar) tabelas do Fluxo 3 (0002/0005/0006) pra
+-- vêm de 0003) e lê (sem gravar) tabelas do Fluxo 3 (0002/0005/0007) pra
 -- calcular elegibilidade de compartilhamento em código (lib/comunidade/*),
 -- nunca aqui dentro.
 --
@@ -8,10 +8,17 @@
 -- Espaço Único de Discussão)", que depende de
 -- prds/fluxo-comunidade-feed-minimo.md (estratégia — regras de negócio
 -- §5/§6) — esse segundo documento não está neste repositório. Mesma
--- lacuna já registrada em 0002/0004/0006/0007 pra essa classe de problema.
+-- lacuna já registrada em 0002/0004/0007/0008 pra essa classe de problema.
 --
 -- Escrita pra ser seguramente re-executável (idempotente), mesma convenção
--- de 0004/0005/0006/0007.
+-- de 0004/0005/0007/0008.
+--
+-- Nota de renumeração (QA do beta): este arquivo nasceu como 0008 — virou
+-- 0009 porque 0006/0007 já estavam ocupados por lista_fundadoras e
+-- nutrição quando este fluxo (até então só local, nunca enviado ao
+-- repositório remoto) foi integrado. Nenhuma mudança de conteúdo, só de
+-- número de arquivo (e das referências a outros arquivos renumerados
+-- nestes comentários).
 --
 -- Duas decisões de engenharia que o PRD não define no nível de schema, e
 -- que ficam registradas aqui por serem a única peça que "toca" código fora
@@ -110,7 +117,7 @@ create policy "corredor publica o proprio post na comunidade"
 
 -- Sem policy de update/delete direta: RF05 (excluir) só existe via a
 -- função definer abaixo (mesmo padrão de
--- marcar_checkins_psicologia_revisados, 0007) — impede editar conteúdo já
+-- marcar_checkins_psicologia_revisados, 0008) — impede editar conteúdo já
 -- publicado (item 12 do PRD, SHOULD/LATER, não construído nesta versão) e
 -- restringe a escrita ao único campo que a regra de negócio permite tocar.
 create or replace function public.excluir_post_comunidade(p_post_id uuid)

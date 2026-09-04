@@ -6,14 +6,20 @@
 -- Periódicos e Sinalização Cruzada", que por sua vez depende de
 -- prds/fluxo-psicologia-esporte-checkins.md (estratégia: zonas, regras de
 -- negócio, limiar determinístico §4.1) — esse segundo documento não está
--- neste repositório. Mesma lacuna já registrada em 0002/0004/0006 para a
+-- neste repositório. Mesma lacuna já registrada em 0002/0004/0007 para a
 -- mesma classe de problema: o schema e o limiar abaixo
 -- (calcular_zona_psicologica) são uma decisão desta implementação —
 -- PLACEHOLDER pendente de revisão pelo psicólogo responsável antes de sair
 -- do beta, nunca apresentado como validado clinicamente até essa revisão.
 --
 -- Escrita pra ser seguramente re-executável (idempotente), mesma convenção
--- de 0004/0005/0006.
+-- de 0004/0005/0007.
+--
+-- Nota de renumeração (QA do beta): este arquivo nasceu como 0007 — virou
+-- 0008 porque 0006 e 0007 já estavam ocupados por lista_fundadoras e por
+-- remove_medicina_esporte quando os fluxos de nutrição/psicologia/comunidade
+-- (até então só locais, nunca enviados ao repositório remoto) foram
+-- integrados. Nenhuma mudança de conteúdo, só de número de arquivo.
 
 -- 0. Extensão de public.atendimentos (0002) — múltiplas especialidades ------
 -- RF-5 do PRD depende disto explicitamente (§10.2: "estrutura genérica de
