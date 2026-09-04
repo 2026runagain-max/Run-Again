@@ -7,7 +7,7 @@
 //     "email@exemplo.com" "Nome Completo" fisioterapia
 //
 // Especialidades válidas: fisioterapia | educacao_fisica | nutricao_esportiva
-//                          | medicina_esporte | psicologia_esporte
+//                          | psicologia_esporte
 
 import { createClient } from "@supabase/supabase-js";
 
@@ -16,7 +16,6 @@ const ESPECIALIDADES = [
   "fisioterapia",
   "educacao_fisica",
   "nutricao_esportiva",
-  "medicina_esporte",
   "psicologia_esporte",
 ];
 

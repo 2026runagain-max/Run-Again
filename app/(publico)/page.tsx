@@ -14,13 +14,13 @@ import { fundadores, fechamentoQuemSomos } from "@/lib/site/fundadores";
 export const metadata: Metadata = {
   title: "Run Again — Volte a correr forte, sem se machucar de novo",
   description:
-    "O primeiro ecossistema que junta fisioterapia, preparação física, nutrição, medicina e psicologia do esporte numa jornada só. Entre na lista de fundadoras.",
+    "O primeiro ecossistema que junta fisioterapia, preparação física, nutrição e psicologia do esporte numa jornada só. Entre na lista de fundadoras.",
 };
 
 const beneficios = [
   "Você volta a treinar forte sem o medo de se machucar de novo — porque o protocolo já entra considerando a carga real da sua rotina, não só do seu treino.",
   "Você entende, pela primeira vez, sua “carga de vida” — os passos do trabalho, o estresse do dia, o sono maldormido — tudo isso entra na conta do seu plano.",
-  "Você tem fisioterapia, preparo físico, nutrição, avaliação médica e psicologia do esporte no mesmo lugar, falando a mesma língua — em vez de cinco profissionais que nunca se conversam entre si.",
+  "Você tem fisioterapia, preparo físico, nutrição e psicologia do esporte no mesmo lugar, falando a mesma língua — em vez de profissionais que nunca se conversam entre si.",
   "Você trata o medo de se machucar de novo como parte do trabalho, não como fraqueza — com acompanhamento de psicologia do esporte que nenhum concorrente oferece.",
   "Você para de pedir desculpa por levar a corrida a sério. Ambição num hobby deixa de ser motivo de culpa.",
 ];
@@ -71,7 +71,7 @@ const faq = [
   {
     pergunta: "Isso é só mais um app de treino?",
     resposta:
-      "Não. Um app de treino te dá uma planilha de km. O Run Again junta fisioterapia, preparo físico, nutrição, avaliação médica e psicologia do esporte na mesma jornada — porque o que evita lesão não é só quanto você corre, é como sua vida inteira sustenta esse treino.",
+      "Não. Um app de treino te dá uma planilha de km. O Run Again junta fisioterapia, preparo físico, nutrição e psicologia do esporte na mesma jornada — porque o que evita lesão não é só quanto você corre, é como sua vida inteira sustenta esse treino.",
   },
   {
     pergunta: "Preciso ser atleta de verdade pra usar?",
@@ -107,8 +107,8 @@ export default function LandingPage() {
               Volte a correr forte — <span className="text-fire">sem se machucar de novo</span>.
             </h1>
             <p className="mx-auto mt-5 max-w-xl font-sans text-base leading-relaxed text-silver">
-              O primeiro ecossistema que junta fisioterapia, preparação física, nutrição,
-              medicina e psicologia do esporte numa jornada só — criado por quem viveu o
+              O primeiro ecossistema que junta fisioterapia, preparação física, nutrição e
+              psicologia do esporte numa jornada só — criado por quem viveu o
               medo de voltar, e assinado por quem trata corredores há mais de 25 anos.
             </p>
           </div>
@@ -194,8 +194,8 @@ export default function LandingPage() {
           O Run Again é o cuidado que devia existir desde a sua primeira corrida.
         </h2>
         <p className="mt-5 font-sans text-base leading-relaxed text-mid">
-          Nenhum concorrente integra fisioterapia, preparação física, nutrição,
-          medicina e psicologia do esporte numa jornada só. O Run Again junta as seis
+          Nenhum concorrente integra fisioterapia, preparação física, nutrição e
+          psicologia do esporte numa jornada só. O Run Again junta as cinco
           coisas que realmente evitam lesão e sustentam evolução — com protocolos
           validados clinicamente, adaptados à sua rotina real, não a uma planilha
           genérica de quilômetros.
@@ -208,21 +208,27 @@ export default function LandingPage() {
         </Card>
       </section>
 
-      {/* 5. Os 6 pilares */}
+      {/* 5. Os 5 pilares */}
       <section className="bg-paper px-4 py-20 sm:px-6">
         <div className="mx-auto max-w-5xl">
           <Eyebrow className="text-center">O ecossistema</Eyebrow>
           <h2 className="mt-2 text-center font-display text-3xl text-ink sm:text-4xl">
-            Os 6 pilares
+            Os 5 pilares
           </h2>
 
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {/* flex + wrap em vez de grid: com 5 pilares (ímpar em relação às 3
+              colunas do desktop), um grid deixaria a última linha alinhada à
+              esquerda com um espaço vazio no lugar do card removido de
+              Medicina do Esporte. Flex-wrap + justify-center centraliza essa
+              última linha incompleta em vez de deixar o buraco. */}
+          <div className="mt-10 flex flex-wrap justify-center gap-5">
             {pilaresProduto.map((pilar) => (
               <PillarCard
                 key={pilar.slug}
                 emoji={pilar.emoji}
                 nome={pilar.nome}
                 descricao={pilar.descricaoCurta}
+                className="w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
               />
             ))}
           </div>

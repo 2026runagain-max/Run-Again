@@ -1,9 +1,10 @@
 /**
  * Pilares de conteúdo do blog — categorização de `/blog/[pilar]`, §5 do PRD
- * "Site Aberto". Diferente dos 6 pilares do produto (lib/site/pilares-produto.ts):
- * aqui Medicina do Esporte e Psicologia do Esporte formam uma única
- * categoria editorial, e existe um pilar de cultura de marca que não é um
- * pilar de produto.
+ * "Site Aberto". Diferente dos 5 pilares do produto (lib/site/pilares-produto.ts):
+ * aqui existe um pilar de cultura de marca que não é um pilar de produto.
+ *
+ * Medicina do Esporte não existe mais como pilar/especialidade do Run
+ * Again — decisão de produto, não recriar categoria própria pra ela.
  */
 export interface PilarBlog {
   slug: string;
@@ -28,8 +29,8 @@ export const pilaresBlog: PilarBlog[] = [
     descricao: "Orientação alimentar para o corredor amador e os mitos de dieta mais comuns.",
   },
   {
-    slug: "medicina-e-psicologia-do-esporte",
-    nome: "Medicina e Psicologia do Esporte",
+    slug: "psicologia-do-esporte",
+    nome: "Psicologia do Esporte",
     descricao: "Ansiedade de retorno, culpa por levar o hobby a sério e check-ins mentais.",
   },
   {

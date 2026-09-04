@@ -13,7 +13,7 @@ export interface PillarCardProps {
 /**
  * Pillar Card do design system (design-system.md): borda inferior Fire 3px,
  * radius 14px. Mesmo ícone/nome em toda parte que reaproveita — home
- * (seção "Os 6 pilares"), /metodo e a navegação por pilar do /blog.
+ * (seção "Os 5 pilares"), /metodo e a navegação por pilar do /blog.
  */
 export function PillarCard({ emoji, nome, descricao, href, className }: PillarCardProps) {
   const conteudo = (

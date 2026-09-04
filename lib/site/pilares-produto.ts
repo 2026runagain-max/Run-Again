@@ -1,8 +1,12 @@
 /**
- * Os 6 pilares do ecossistema Run Again — usados no Pillar Card da home
- * (seção "Os 6 pilares", copy/home-lista-fundadoras.md) e em /metodo, onde
+ * Os 5 pilares do ecossistema Run Again — usados no Pillar Card da home
+ * (seção "Os 5 pilares", copy/home-lista-fundadoras.md) e em /metodo, onde
  * o mesmo conjunto aparece explicado em profundidade (§6.6 do PRD "Site
  * Aberto"). Mesmo ícone/nome nos dois lugares, como pede a §5 do PRD.
+ *
+ * Medicina do Esporte foi removida da estratégia de produto: o Run Again
+ * não terá médico do esporte, ortopedista, nem avaliação médica na equipe.
+ * Decisão de produto — não reintroduzir este pilar sem revisar essa decisão.
  *
  * Texto de `descricaoLonga` é original desta tarefa (não existe em nenhum
  * documento fornecido) — escrito a partir do que o PRD e a copy de home já
@@ -42,14 +46,6 @@ export const pilaresProduto: PilarProduto[] = [
     descricaoCurta: "Orientação alimentar para o corredor amador — sem mito de dieta.",
     descricaoLonga:
       "Orientação alimentar pensada pra rotina real de quem corre e trabalha — sem prometer fórmula mágica nem cortar grupo alimentar inteiro por modismo. O que muda é o que sustenta o treino e a recuperação, coordenado com o que a fisioterapia e a preparação física já sabem sobre o seu momento.",
-  },
-  {
-    slug: "medicina-do-esporte",
-    emoji: "🩺",
-    nome: "Medicina do Esporte",
-    descricaoCurta: "Avaliação médica esportiva, coordenada com o resto do protocolo.",
-    descricaoLonga:
-      "Avaliação médica que conversa com o restante da equipe, não um encaminhamento avulso que termina numa gaveta. Serve pra confirmar o que é seguro progredir agora e o que ainda precisa de mais um passo antes — sempre em conjunto com fisioterapia, preparação física e psicologia do esporte.",
   },
   {
     slug: "psicologia-do-esporte",
