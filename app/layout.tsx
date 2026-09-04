@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
+import { SITE_URL } from "@/lib/site/config";
 import "./globals.css";
 
 const bebasNeue = Bebas_Neue({
@@ -14,6 +15,10 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  // Convenção do repo: cada página exporta o título completo já com o sufixo
+  // "— Run Again" (ver app/(publico)/sobre/page.tsx etc.) — sem template
+  // aqui pra não duplicar esse sufixo.
   title: "Run Again — Beta",
   description:
     "Protocolo de retorno ao esporte para corredores lesionados. Fisioterapia, preparo físico e ecossistema clínico em um só lugar.",

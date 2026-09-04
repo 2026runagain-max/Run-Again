@@ -1,90 +1,408 @@
-import { Button } from "@/components/ui/Button";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Card } from "@/components/ui/Card";
+import { PillarCard } from "@/components/marketing/PillarCard";
+import { ListaFundadorasForm } from "@/components/marketing/ListaFundadorasForm";
+import { CartaoConversao } from "@/components/marketing/CartaoConversao";
+import { pilaresProduto } from "@/lib/site/pilares-produto";
+import { fundadores, fechamentoQuemSomos } from "@/lib/site/fundadores";
 
-const protocolo = [
+// Copy exata de copy/home-lista-fundadoras.md — não parafraseada, não
+// resumida (regra da TAREFA, item 1). Ver PR para o "ANTES vs. DEPOIS" com
+// o texto que estava no ar antes desta substituição.
+export const metadata: Metadata = {
+  title: "Run Again — Volte a correr forte, sem se machucar de novo",
+  description:
+    "O primeiro ecossistema que junta fisioterapia, preparação física, nutrição, medicina e psicologia do esporte numa jornada só. Entre na lista de fundadoras.",
+};
+
+const beneficios = [
+  "Você volta a treinar forte sem o medo de se machucar de novo — porque o protocolo já entra considerando a carga real da sua rotina, não só do seu treino.",
+  "Você entende, pela primeira vez, sua “carga de vida” — os passos do trabalho, o estresse do dia, o sono maldormido — tudo isso entra na conta do seu plano.",
+  "Você tem fisioterapia, preparo físico, nutrição, avaliação médica e psicologia do esporte no mesmo lugar, falando a mesma língua — em vez de cinco profissionais que nunca se conversam entre si.",
+  "Você trata o medo de se machucar de novo como parte do trabalho, não como fraqueza — com acompanhamento de psicologia do esporte que nenhum concorrente oferece.",
+  "Você para de pedir desculpa por levar a corrida a sério. Ambição num hobby deixa de ser motivo de culpa.",
+];
+
+const provas = [
   {
-    titulo: "Fisioterapia",
+    titulo: "Protocolo de atleta, e mais",
     texto:
-      "Retorno ao esporte com evidência científica — não repouso genérico até 'melhorar'.",
+      "O amador é tratado com o mesmo rigor de um profissional patrocinado — só que sem o luxo de descansar por obrigação.",
   },
   {
-    titulo: "Preparo físico",
-    texto:
-      "Progressão de carga real, calculada com a sua carga de vida: trabalho, sono, estresse — não só o pace.",
+    titulo: "A vida inteira entra no cálculo",
+    texto: "Até os passos que você dá no trabalho contam pro seu volume da semana.",
   },
   {
-    titulo: "Ecossistema clínico",
+    titulo: "Ciência aplicada + vivência real",
     texto:
-      "Nutrição esportiva, medicina e psicologia do esporte, coordenadas com a fisioterapia — não isoladas.",
+      "Mais de 25 anos de fisioterapia clínica assinando os protocolos, e alguém que viveu a lesão, o medo e a volta liderando o produto.",
+  },
+];
+
+const errosDoMercado = [
+  {
+    titulo: "Os que empilham sem critério",
+    texto:
+      "Assessorias que validam qualquer meta e só sobem o volume de km por semana, sem fortalecimento, sem olhar pra sua vida fora do treino.",
+  },
+  {
+    titulo: "Os que esperam ser procurados",
+    texto:
+      "Treinadores reativos: “se me perguntar, eu falo”. Não te levam pro próximo patamar porque isso exigiria um trabalho que ninguém está cobrando deles.",
+  },
+  {
+    titulo: "Os que romantizam o sofrimento",
+    texto:
+      "Corredores-referência que usam a própria dor como critério de exclusão: “se você não sofreu como eu sofri, não vai chegar lá”. Desencorajam mais do que inspiram.",
+  },
+];
+
+const oferta = [
+  "Prioridade de acesso quando o app abrir — você entra antes de quem chegar depois.",
+  "Preço de fundadora travado — quando abrir pro público, a assinatura Run Again deve custar entre R$97 e R$197 por mês (valor sujeito a confirmação). Quem está na lista agora trava a condição mais baixa, pelo tempo em que continuar assinando.",
+  "Ebook “Corrida sem Lesão” de bônus, liberado assim que você entra na lista (valor percebido: R$47).",
+  "Acesso aos bastidores da construção do produto — grupo fechado onde você ajuda a moldar o que o Run Again vira antes do lançamento público.",
+];
+
+const faq = [
+  {
+    pergunta: "Isso é só mais um app de treino?",
+    resposta:
+      "Não. Um app de treino te dá uma planilha de km. O Run Again junta fisioterapia, preparo físico, nutrição, avaliação médica e psicologia do esporte na mesma jornada — porque o que evita lesão não é só quanto você corre, é como sua vida inteira sustenta esse treino.",
+  },
+  {
+    pergunta: "Preciso ser atleta de verdade pra usar?",
+    resposta:
+      "Não. O Run Again foi criado por uma corredora amadora, pra corredores amadores. Você não precisa de currículo esportivo — precisa querer treinar com inteligência.",
+  },
+  {
+    pergunta: "Quando o app lança?",
+    resposta:
+      "Estamos na fase de construção e teste com um grupo seleto. Quem está na lista de fundadoras é avisada em primeira mão, antes de qualquer anúncio público.",
+  },
+  {
+    pergunta: "O que acontece depois que eu entro na lista?",
+    resposta:
+      "Você recebe o ebook Corrida sem Lesão na hora, entra no grupo de bastidores, e é a primeira a saber quando as vagas de acesso antecipado abrirem.",
+  },
+  {
+    pergunta: "Vou ser cobrada por entrar na lista?",
+    resposta:
+      "Não. Entrar na lista é grátis e não pede cartão. Você só decide se quer assinar quando o app estiver pronto — com a condição de preço já travada.",
   },
 ];
 
 export default function LandingPage() {
   return (
     <>
-      <section className="bg-ink px-4 py-20 text-center sm:px-6">
-        <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire">
-          RUN AGAIN · BETA — 50 VAGAS
-        </p>
-        <h1 className="mx-auto mt-4 max-w-2xl font-display text-5xl leading-tight text-white sm:text-6xl">
-          Levar corrida a sério não é <span className="text-fire">frescura</span>.
-        </h1>
-        <p className="mx-auto mt-5 max-w-xl font-sans text-base text-silver">
-          Você se machucou e desconfia do próprio corpo — mesmo sabendo que é
-          &ldquo;só&rdquo; uma corrida de fim de semana. Isso tem nome: Returnista. Tem
-          protocolo também: evidência científica, progressão real e respeito pela sua
-          carga de vida, não só pela sua vontade de voltar.
-        </p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Button href="/cadastro" variant="primary">
-            Usar meu código de convite
-          </Button>
-          <Button
-            href="/login"
-            variant="ghost"
-            className="border-white/18 text-white"
-          >
-            Já tenho conta
-          </Button>
+      {/* 1. Hero */}
+      <section className="bg-ink px-4 py-20 sm:px-6">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 text-center">
+          <div>
+            <Eyebrow dark>Lista de fundadoras · vagas limitadas na fase atual</Eyebrow>
+            <h1 className="mx-auto mt-4 max-w-3xl font-display text-5xl leading-tight text-white sm:text-6xl">
+              Volte a correr forte — <span className="text-fire">sem se machucar de novo</span>.
+            </h1>
+            <p className="mx-auto mt-5 max-w-xl font-sans text-base leading-relaxed text-silver">
+              O primeiro ecossistema que junta fisioterapia, preparação física, nutrição,
+              medicina e psicologia do esporte numa jornada só — criado por quem viveu o
+              medo de voltar, e assinado por quem trata corredores há mais de 25 anos.
+            </p>
+          </div>
+
+          <CartaoConversao>
+            <ListaFundadorasForm origem="hero" />
+          </CartaoConversao>
+
+          <Link href="/login" className="text-sm font-sans text-silver hover:text-white hover:underline">
+            Já tem um convite? Entrar
+          </Link>
         </div>
       </section>
 
+      {/* 2. A cena (dor) */}
       <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
-        <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire-text">
-          O PROTOCOLO
-        </p>
-        <h2 className="mt-2 font-display text-3xl text-ink">
-          Nada disso funciona sozinho.
+        <Eyebrow>A cena que você conhece</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          Você olha pro tênis parado no canto e pensa duas vezes antes de calçar.
         </h2>
-        <p className="mt-2 max-w-md font-sans text-sm text-mid">
-          Três frentes clínicas, coordenadas — não um app de fisioterapia com um blog
-          de nutrição do lado.
+        <p className="mt-5 font-sans text-base leading-relaxed text-mid">
+          Faz duas semanas, dois meses ou dois anos desde a sua última corrida — e o
+          número não importa, porque o medo é sempre do mesmo tamanho. Não é preguiça. É
+          a lembrança do estalo no joelho, da fisioterapia que tratou o sintoma e não a
+          causa, do dia em que alguém disse “eu avisei que você tava exagerando”.
+        </p>
+        <p className="mt-4 font-sans text-base leading-relaxed text-mid">
+          Só que ninguém te contou o outro lado: hobby não tem teto. Dá pra levar a
+          corrida a sério — treinar forte, ter meta, querer evoluir — sem isso ser
+          exagero.
         </p>
 
-        <ol className="mt-10 flex flex-col divide-y divide-mid/15">
-          {protocolo.map((item, i) => (
-            <li key={item.titulo} className="flex gap-5 py-7 first:pt-0 last:pb-0 sm:gap-8">
-              <span
-                className="w-12 shrink-0 font-display text-4xl text-fire sm:w-16 sm:text-5xl"
-                aria-hidden="true"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div>
-                <h3 className="font-display text-xl text-ink sm:text-2xl">
-                  {item.titulo}
-                </h3>
-                <p className="mt-1 max-w-md font-sans text-sm text-mid">{item.texto}</p>
+        <Card variant="insight" className="mt-8">
+          <p className="font-display text-2xl leading-snug text-ink sm:text-3xl">
+            Você não se machucou por pedir demais do seu corpo. Se machucou porque
+            ninguém te preparou pro tamanho da sua ambição.
+          </p>
+        </Card>
+      </section>
+
+      {/* 3. Quem somos */}
+      <section className="bg-smoke px-4 py-20 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <Eyebrow>Quem somos</Eyebrow>
+          <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+            Duas pessoas que já passaram pelos dois lados dessa história.
+          </h2>
+
+          <div className="mt-10 flex flex-col gap-10">
+            {/* Foto oficial pendente — ver TODO no PR. Usar iniciais até lá,
+                nunca foto de banco de imagens genérica (nota de produção
+                da copy de home). */}
+            {fundadores.map((fundador) => (
+              <div key={fundador.nome} className="flex flex-col gap-4 sm:flex-row">
+                <div
+                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-fire-dim font-display text-2xl text-fire-text"
+                  aria-hidden="true"
+                >
+                  {fundador.inicial}
+                </div>
+                <div>
+                  <h3 className="font-display text-xl text-ink">
+                    {fundador.nome} — {fundador.papel}
+                  </h3>
+                  <p className="mt-2 font-sans text-sm leading-relaxed text-mid">
+                    {fundador.texto}
+                  </p>
+                </div>
               </div>
+            ))}
+          </div>
+
+          <p className="mt-10 font-sans text-base leading-relaxed text-ink">
+            {fechamentoQuemSomos}
+          </p>
+        </div>
+      </section>
+
+      {/* 4. O produto como solução */}
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+        <Eyebrow>A solução que faltava</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          O Run Again é o cuidado que devia existir desde a sua primeira corrida.
+        </h2>
+        <p className="mt-5 font-sans text-base leading-relaxed text-mid">
+          Nenhum concorrente integra fisioterapia, preparação física, nutrição,
+          medicina e psicologia do esporte numa jornada só. O Run Again junta as seis
+          coisas que realmente evitam lesão e sustentam evolução — com protocolos
+          validados clinicamente, adaptados à sua rotina real, não a uma planilha
+          genérica de quilômetros.
+        </p>
+
+        <Card variant="insight" className="mt-8 text-center">
+          <p className="font-display text-2xl text-ink sm:text-3xl">
+            Cuidado não é pegar leve. É pegar certo.
+          </p>
+        </Card>
+      </section>
+
+      {/* 5. Os 6 pilares */}
+      <section className="bg-paper px-4 py-20 sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <Eyebrow className="text-center">O ecossistema</Eyebrow>
+          <h2 className="mt-2 text-center font-display text-3xl text-ink sm:text-4xl">
+            Os 6 pilares
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {pilaresProduto.map((pilar) => (
+              <PillarCard
+                key={pilar.slug}
+                emoji={pilar.emoji}
+                nome={pilar.nome}
+                descricao={pilar.descricaoCurta}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. Benefícios */}
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+        <Eyebrow>O que muda pra você</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          O que você conquista dentro do Run Again
+        </h2>
+
+        <ul className="mt-8 flex flex-col gap-5">
+          {beneficios.map((texto, i) => (
+            <li key={i} className="flex gap-4">
+              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-fire" aria-hidden="true" />
+              <p className="font-sans text-base leading-relaxed text-mid">{texto}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 7. Prova / por que confiar */}
+      <section className="bg-ink px-4 py-20 sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <Eyebrow dark>Por que confiar</Eyebrow>
+          <h2 className="mt-2 font-display text-3xl text-white sm:text-4xl">
+            Isso não é discurso de lançamento.
+          </h2>
+
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-3">
+            {provas.map((prova) => (
+              <Card key={prova.titulo} variant="ghost" className="p-6">
+                <h3 className="font-display text-xl text-white">{prova.titulo}</h3>
+                <p className="mt-2 font-sans text-sm leading-relaxed text-silver">
+                  {prova.texto}
+                </p>
+              </Card>
+            ))}
+          </div>
+
+          <Card variant="ghost" className="mt-5 p-8 text-center">
+            <p className="font-display text-3xl text-fire sm:text-4xl">7 em cada 10</p>
+            <p className="mx-auto mt-2 max-w-xl font-sans text-sm leading-relaxed text-silver">
+              No Brasil, 7 em cada 10 corredores se lesionam todo ano — e a maioria
+              volta a treinar do mesmo jeito que se machucou da primeira vez.
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* 8. Como o mercado erra */}
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+        <Eyebrow>Por que o resto do mercado não resolve</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          Você já deve ter esbarrado num desses três.
+        </h2>
+
+        <ul className="mt-8 flex flex-col divide-y divide-mid/15">
+          {errosDoMercado.map((erro) => (
+            <li key={erro.titulo} className="py-6 first:pt-0 last:pb-0">
+              <h3 className="font-sans text-base font-bold text-ink">{erro.titulo}</h3>
+              <p className="mt-1 font-sans text-sm leading-relaxed text-mid">{erro.texto}</p>
+            </li>
+          ))}
+        </ul>
+
+        <p className="mt-8 font-sans text-base font-semibold text-ink">
+          O Run Again nasceu pra ser o oposto dos três.
+        </p>
+      </section>
+
+      {/* 9. CTA intermediário */}
+      <section className="bg-ink-2 px-4 py-20 sm:px-6">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-8 text-center">
+          <h2 className="font-display text-3xl leading-tight text-white sm:text-4xl">
+            Ainda não dá pra assinar o Run Again — mas dá pra garantir sua vaga antes
+            de todo mundo.
+          </h2>
+          <CartaoConversao>
+            <ListaFundadorasForm
+              origem="cta-intermediario"
+              ctaLabel="Garantir minha vaga de fundadora"
+            />
+          </CartaoConversao>
+        </div>
+      </section>
+
+      {/* 10. Oferta — condição de fundadora */}
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+        <Eyebrow>Condição de fundadora</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          O que você garante entrando pra lista agora
+        </h2>
+
+        <ol className="mt-8 flex flex-col gap-6">
+          {oferta.map((texto, i) => (
+            <li key={i} className="flex gap-5">
+              <span className="w-8 shrink-0 font-display text-3xl text-fire-text" aria-hidden="true">
+                {i + 1}
+              </span>
+              <p className="font-sans text-base leading-relaxed text-mid">{texto}</p>
             </li>
           ))}
         </ol>
 
-        <p className="mt-10 font-sans text-sm text-mid">
-          Conduzido pela <span className="font-semibold text-ink">Equipe Run Again</span>{" "}
-          — fisioterapeutas, educadores físicos, nutricionistas esportivos, médicos e
-          psicólogos do esporte contratados diretamente. Não é uma rede aberta de
-          credenciados.
+        <p className="mt-8 font-sans text-base font-semibold text-ink">
+          R$0 hoje. Sem cartão. Só a sua vaga garantida antes que a fase de fundadoras
+          feche.
         </p>
+      </section>
+
+      {/* 11. Nosso compromisso (substitui a garantia) */}
+      <section className="bg-smoke px-4 py-20 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <Eyebrow>Nosso compromisso</Eyebrow>
+          <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+            Não vamos prometer o que ainda não testamos em escala.
+          </h2>
+          <p className="mt-5 font-sans text-base leading-relaxed text-mid">
+            O Run Again está em construção. Isso significa que não vamos te vender uma
+            garantia de resultado que não podemos sustentar ainda. O que garantimos é
+            isto: todo protocolo que sair daqui passa pelas mãos de quem tem mais de 25
+            anos de fisioterapia clínica, e todo conteúdo é decidido por quem já viveu,
+            na pele, o medo de voltar a correr. Entrar na lista não custa nada e não te
+            compromete com nada — é só garantir que, quando abrirmos, você seja uma das
+            primeiras a saber.
+          </p>
+        </div>
+      </section>
+
+      {/* 12. Perguntas frequentes */}
+      <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
+        <Eyebrow>Perguntas frequentes</Eyebrow>
+        <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
+          Antes de entrar, tira suas dúvidas.
+        </h2>
+
+        <div className="mt-8 flex flex-col divide-y divide-mid/15">
+          {faq.map((item) => (
+            <details key={item.pergunta} className="py-5 first:pt-0 last:pb-0">
+              <summary className="cursor-pointer list-none font-sans text-base font-bold text-ink marker:content-none">
+                {item.pergunta}
+              </summary>
+              <p className="mt-2 font-sans text-sm leading-relaxed text-mid">
+                {item.resposta}
+              </p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* 13. Urgência (genuína) */}
+      <section className="mx-auto max-w-3xl px-4 pb-4 sm:px-6">
+        <Card variant="insight">
+          <p className="font-sans text-sm leading-relaxed text-ink">
+            Estamos testando o Run Again com um grupo pequeno de propósito — é assim
+            que cada protocolo sai validado, não só bonito no papel. Isso significa que
+            a fase de fundadoras tem vagas limitadas de verdade.
+          </p>
+        </Card>
+      </section>
+
+      {/* 14. CTA final */}
+      <section className="bg-ink px-4 py-20 sm:px-6">
+        <div className="mx-auto flex max-w-2xl flex-col items-center gap-8 text-center">
+          <div>
+            <h2 className="font-display text-5xl text-white sm:text-6xl">
+              É hora de <span className="text-fire">correr</span>.
+            </h2>
+            <p className="mx-auto mt-4 max-w-md font-sans text-base leading-relaxed text-silver">
+              De novo — dessa vez com alguém do seu lado, e sem pedir desculpa por
+              querer mais.
+            </p>
+          </div>
+          <CartaoConversao>
+            <ListaFundadorasForm origem="cta-final" ctaLabel="Quero minha vaga de fundadora" />
+          </CartaoConversao>
+        </div>
       </section>
     </>
   );

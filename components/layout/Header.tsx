@@ -21,7 +21,7 @@ export function Header({ area, sessao }: HeaderProps) {
   const [menuAberto, setMenuAberto] = useState(false);
   const [avatarMenuAberto, setAvatarMenuAberto] = useState(false);
 
-  const itens = area === "publico" ? [] : navPorArea(area);
+  const itens = navPorArea(area);
   const logoHref = sessao ? `/${sessao.papel}/painel` : "/";
 
   return (
