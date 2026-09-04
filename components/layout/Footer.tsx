@@ -1,6 +1,11 @@
 import Link from "next/link";
 
+// "Rodapé" da copy de home (copy/home-lista-fundadoras.md): Área de Membro,
+// Ebook Corrida sem Lesão e Contato — mantidos junto dos links institucionais
+// que já existiam desde o Fluxo 1.
 const linksInstitucionais = [
+  { label: "Área de Membro", href: "/area-de-membro" },
+  { label: "Ebook Corrida sem Lesão", href: "/ebook-corrida-sem-lesao" },
   { label: "Sobre", href: "/sobre" },
   { label: "Contato", href: "/contato" },
   { label: "Termos de Uso", href: "/termos" },

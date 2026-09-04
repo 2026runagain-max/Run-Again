@@ -15,6 +15,17 @@ export const navProfissional: NavItem[] = [
   { label: "Perfil", href: "/profissional/perfil" },
 ];
 
-export function navPorArea(area: "corredor" | "profissional"): NavItem[] {
-  return area === "corredor" ? navCorredor : navProfissional;
+// §4 do PRD "Site Aberto" — navegação do header público (deslogado), à
+// esquerda dos CTAs de conversão.
+export const navPublico: NavItem[] = [
+  { label: "Blog", href: "/blog" },
+  { label: "Explica", href: "/explica" },
+  { label: "Método", href: "/metodo" },
+  { label: "Sobre", href: "/sobre" },
+];
+
+export function navPorArea(area: "publico" | "corredor" | "profissional"): NavItem[] {
+  if (area === "corredor") return navCorredor;
+  if (area === "profissional") return navProfissional;
+  return navPublico;
 }

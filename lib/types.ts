@@ -5,11 +5,13 @@ export type Persona =
   | "iniciante_consciente"
   | "amador_ambicioso";
 
+// Medicina do Esporte foi removida da estratégia de produto (decisão de
+// produto: sem médico do esporte, ortopedista ou avaliação médica na
+// equipe do Run Again) — não readicionar sem revisar essa decisão.
 export type Especialidade =
   | "fisioterapia"
   | "educacao_fisica"
   | "nutricao_esportiva"
-  | "medicina_esporte"
   | "psicologia_esporte";
 
 export interface Sessao {
