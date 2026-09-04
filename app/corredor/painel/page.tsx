@@ -28,6 +28,8 @@ import {
   riscoPrimeiroQueCargaForma,
 } from "@/lib/painel/calculo";
 import type { CargaFormaResumo, ResultadoPainel, RiscoResumo } from "@/lib/painel/types";
+import { elegibilidadeAderencia, elegibilidadeCargaForma, elegibilidadeRisco } from "@/lib/comunidade/calculo";
+import { aindaNaoCompartilhada, getChavesJaCompartilhadas } from "@/lib/comunidade/queries";
 
 export const metadata: Metadata = { title: "Painel — Run Again" };
 
@@ -123,12 +125,14 @@ async function PainelComDiagnostico({
     return <OnboardingPainel />;
   }
 
-  const [respostasResultado, aderenciaResultado, historicoResultado, resumoBemEstar] = await Promise.all([
-    getRespostas24hResultado(userId),
-    getAderenciaResultado(userId),
-    getHistoricoAtendimentosCorredorResultado(),
-    getResumoBemEstar(userId, avaliacao),
-  ]);
+  const [respostasResultado, aderenciaResultado, historicoResultado, resumoBemEstar, chavesJaCompartilhadas] =
+    await Promise.all([
+      getRespostas24hResultado(userId),
+      getAderenciaResultado(userId),
+      getHistoricoAtendimentosCorredorResultado(),
+      getResumoBemEstar(userId, avaliacao),
+      getChavesJaCompartilhadas(userId),
+    ]);
 
   const respostas = respostasResultado.ok ? respostasResultado.data : [];
 
@@ -163,14 +167,36 @@ async function PainelComDiagnostico({
       }
     : { ok: false };
 
+  // RF01 da Comunidade — convite inline nos 3 cards de evidência elegível
+  // que vivem nesta página (o 4º, insight, mora em minha-recuperacao/
+  // evolucao/page.tsx). aindaNaoCompartilhada devolve null tanto quando a
+  // leitura não é elegível quanto quando ela já foi compartilhada.
+  const compartilharRisco = aindaNaoCompartilhada(elegibilidadeRisco(riscoResultado), chavesJaCompartilhadas, "risco");
+  const compartilharCargaForma = aindaNaoCompartilhada(
+    elegibilidadeCargaForma(cargaFormaResultado),
+    chavesJaCompartilhadas,
+    "carga_forma",
+  );
+  const compartilharAderencia = aindaNaoCompartilhada(
+    elegibilidadeAderencia(aderenciaResultado),
+    chavesJaCompartilhadas,
+    "aderencia",
+  );
+
   // Hierarquia visual (auditoria de design, 2026-09): quando risco ou
   // carga/forma pede atenção, esse par sobe pra logo depois do hero — é
   // continuação do mesmo sinal, não mais uma métrica na grade. Aderência
   // nunca disputa essa posição (regra §6.1: nunca vira cobrança visual).
   const parCargaRisco = riscoPrimeiroQueCargaForma(riscoResultado, cargaFormaResultado)
-    ? [<CardRisco key="risco" resultado={riscoResultado} />, <CardCargaForma key="carga" resultado={cargaFormaResultado} />]
-    : [<CardCargaForma key="carga" resultado={cargaFormaResultado} />, <CardRisco key="risco" resultado={riscoResultado} />];
-  const cartaoAderencia = <CardAderencia key="aderencia" resultado={aderenciaResultado} />;
+    ? [
+        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} />,
+        <CardCargaForma key="carga" resultado={cargaFormaResultado} compartilhar={compartilharCargaForma} />,
+      ]
+    : [
+        <CardCargaForma key="carga" resultado={cargaFormaResultado} compartilhar={compartilharCargaForma} />,
+        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} />,
+      ];
+  const cartaoAderencia = <CardAderencia key="aderencia" resultado={aderenciaResultado} compartilhar={compartilharAderencia} />;
   const cartaoBemEstar = (
     <CardBemEstar
       key="bem-estar"

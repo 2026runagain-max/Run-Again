@@ -8,6 +8,7 @@ export const navCorredor: NavItem[] = [
   { label: "Minha Recuperação", href: "/corredor/minha-recuperacao" },
   { label: "Nutrição", href: "/corredor/nutricao" },
   { label: "Psicologia", href: "/corredor/psicologia/check-in" },
+  { label: "Comunidade", href: "/corredor/comunidade" },
   { label: "Perfil", href: "/corredor/perfil" },
 ];
 
