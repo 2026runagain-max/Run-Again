@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { EmptyState } from "@/components/estados/EmptyState";
+import Link from "next/link";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import { getSessao } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "Painel — Run Again" };
@@ -18,7 +20,15 @@ export default async function PainelProfissionalPage() {
         </h1>
       </div>
 
-      <EmptyState subtitulo="Os fluxos clínicos — avaliação, protocolo, acompanhamento — chegam nos próximos passos. Sua conta já está ativa e pronta." />
+      <Link href="/profissional/pacientes">
+        <Card variant="pillar" className="flex flex-col gap-2 transition-shadow hover:shadow-md">
+          <Badge>PRESCRIÇÃO CLÍNICA</Badge>
+          <h2 className="font-display text-2xl text-ink">Pacientes</h2>
+          <p className="text-sm font-sans text-mid">
+            Busca um corredor, abre o prontuário e continua (ou inicia) o atendimento.
+          </p>
+        </Card>
+      </Link>
     </div>
   );
 }
