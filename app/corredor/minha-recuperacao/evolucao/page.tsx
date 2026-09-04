@@ -11,6 +11,8 @@ import {
   getRadar,
 } from "@/lib/fisioterapia/queries";
 import { corredorCopy } from "@/lib/fisioterapia/copy";
+import { elegibilidadeInsight } from "@/lib/comunidade/calculo";
+import { aindaNaoCompartilhada, getChavesJaCompartilhadas } from "@/lib/comunidade/queries";
 
 export const metadata: Metadata = { title: "Minha Evolução — Run Again" };
 
@@ -51,6 +53,11 @@ export default async function MinhaEvolucaoPage() {
   // retorna um resultado.
   const insight = gerarInsight(evolucoes, assimetrias);
 
+  // RF01 da Comunidade — convite inline, mesma leitura combinada em
+  // components/painel/CardRisco.tsx e nas outras 2 do painel.
+  const jaCompartilhadas = await getChavesJaCompartilhadas(perfil.id);
+  const compartilharInsight = aindaNaoCompartilhada(elegibilidadeInsight(insight), jaCompartilhadas, "insight");
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -60,7 +67,7 @@ export default async function MinhaEvolucaoPage() {
         <h1 className="mt-1 font-display text-3xl text-ink">O que já mudou</h1>
       </div>
 
-      {insight && <InsightCard insight={insight} />}
+      {insight && <InsightCard insight={insight} compartilhar={compartilharInsight} />}
 
       <Card variant="pillar">
         <RadarCapacidades dados={radar} publico="corredor" />

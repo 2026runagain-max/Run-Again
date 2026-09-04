@@ -125,12 +125,16 @@ export const riscoCopy = {
 export const bemEstarCaption =
   "É a leitura do seu diagnóstico. Ela volta a mudar quando você responder de novo — não a cada sessão.";
 
-export const OUTROS_PILARES = [
-  { nome: "Preparo físico" },
-  { nome: "Nutrição esportiva" },
-  { nome: "Medicina do esporte" },
-  { nome: "Psicologia do esporte" },
-];
+// RF-7 do PRD de Psicologia do Esporte — depois do primeiro check-in
+// periódico, o card deixa de ser um retrato estático do diagnóstico e passa
+// a atualizar a cada resposta (lib/psicologia/queries.ts, getResumoBemEstar).
+export const bemEstarCaptionAtualizado = "Atualiza a cada check-in de Psicologia do Esporte que você responde.";
+
+// "Nutrição esportiva" e "Psicologia do esporte" saíram desta lista — RF11
+// do PRD de Nutrição Esportiva e RF-7 do PRD de Psicologia do Esporte
+// substituem esses placeholders por cards reais assim que há dado; ver
+// components/painel/GradePilares.tsx.
+export const OUTROS_PILARES = [{ nome: "Preparo físico" }, { nome: "Medicina do esporte" }];
 
 // Regra §6: placeholder nunca vazio sem explicação, nunca com data.
 //

@@ -19,6 +19,7 @@ import { getAvaliacaoAtual } from "@/lib/avaliacao/queries";
 import { estados } from "@/lib/avaliacao/copy";
 import { getHistoricoAtendimentosCorredorResultado } from "@/lib/fisioterapia/queries";
 import { getAderenciaResultado, getPerfilPainel, getRespostas24hResultado } from "@/lib/painel/queries";
+import { getResumoBemEstar } from "@/lib/psicologia/queries";
 import {
   algumSinalDeAtencao,
   calcularRiscoAtualizado,
@@ -27,6 +28,8 @@ import {
   riscoPrimeiroQueCargaForma,
 } from "@/lib/painel/calculo";
 import type { CargaFormaResumo, ResultadoPainel, RiscoResumo } from "@/lib/painel/types";
+import { elegibilidadeAderencia, elegibilidadeCargaForma, elegibilidadeRisco } from "@/lib/comunidade/calculo";
+import { aindaNaoCompartilhada, getChavesJaCompartilhadas } from "@/lib/comunidade/queries";
 
 export const metadata: Metadata = { title: "Painel — Run Again" };
 
@@ -57,7 +60,7 @@ export default async function PainelCorredorPage() {
       </div>
 
       {!diagnosticoPronto ? (
-        <PainelSemDiagnostico avaliacaoIniciada={!!avaliacao} />
+        <PainelSemDiagnostico avaliacaoIniciada={!!avaliacao} userId={user.id} />
       ) : (
         <PainelComDiagnostico userId={user.id} avaliacao={avaliacao} />
       )}
@@ -71,7 +74,7 @@ export default async function PainelCorredorPage() {
 // bem-estar ainda).
 // ---------------------------------------------------------------------------
 
-function PainelSemDiagnostico({ avaliacaoIniciada }: { avaliacaoIniciada: boolean }) {
+function PainelSemDiagnostico({ avaliacaoIniciada, userId }: { avaliacaoIniciada: boolean; userId: string }) {
   const copy = avaliacaoIniciada ? estados.vazioPainelAvaliacaoIncompleta : estados.vazioPainelSemDiagnostico;
 
   return (
@@ -92,7 +95,7 @@ function PainelSemDiagnostico({ avaliacaoIniciada }: { avaliacaoIniciada: boolea
         </Card>
       </Link>
 
-      <GradePilares />
+      <GradePilares userId={userId} />
     </div>
   );
 }
@@ -122,11 +125,14 @@ async function PainelComDiagnostico({
     return <OnboardingPainel />;
   }
 
-  const [respostasResultado, aderenciaResultado, historicoResultado] = await Promise.all([
-    getRespostas24hResultado(userId),
-    getAderenciaResultado(userId),
-    getHistoricoAtendimentosCorredorResultado(),
-  ]);
+  const [respostasResultado, aderenciaResultado, historicoResultado, resumoBemEstar, chavesJaCompartilhadas] =
+    await Promise.all([
+      getRespostas24hResultado(userId),
+      getAderenciaResultado(userId),
+      getHistoricoAtendimentosCorredorResultado(),
+      getResumoBemEstar(userId, avaliacao),
+      getChavesJaCompartilhadas(userId),
+    ]);
 
   const respostas = respostasResultado.ok ? respostasResultado.data : [];
 
@@ -161,18 +167,42 @@ async function PainelComDiagnostico({
       }
     : { ok: false };
 
+  // RF01 da Comunidade — convite inline nos 3 cards de evidência elegível
+  // que vivem nesta página (o 4º, insight, mora em minha-recuperacao/
+  // evolucao/page.tsx). aindaNaoCompartilhada devolve null tanto quando a
+  // leitura não é elegível quanto quando ela já foi compartilhada.
+  const compartilharRisco = aindaNaoCompartilhada(elegibilidadeRisco(riscoResultado), chavesJaCompartilhadas, "risco");
+  const compartilharCargaForma = aindaNaoCompartilhada(
+    elegibilidadeCargaForma(cargaFormaResultado),
+    chavesJaCompartilhadas,
+    "carga_forma",
+  );
+  const compartilharAderencia = aindaNaoCompartilhada(
+    elegibilidadeAderencia(aderenciaResultado),
+    chavesJaCompartilhadas,
+    "aderencia",
+  );
+
   // Hierarquia visual (auditoria de design, 2026-09): quando risco ou
   // carga/forma pede atenção, esse par sobe pra logo depois do hero — é
   // continuação do mesmo sinal, não mais uma métrica na grade. Aderência
   // nunca disputa essa posição (regra §6.1: nunca vira cobrança visual).
   const parCargaRisco = riscoPrimeiroQueCargaForma(riscoResultado, cargaFormaResultado)
-    ? [<CardRisco key="risco" resultado={riscoResultado} />, <CardCargaForma key="carga" resultado={cargaFormaResultado} />]
-    : [<CardCargaForma key="carga" resultado={cargaFormaResultado} />, <CardRisco key="risco" resultado={riscoResultado} />];
-  const cartaoAderencia = <CardAderencia key="aderencia" resultado={aderenciaResultado} />;
+    ? [
+        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} />,
+        <CardCargaForma key="carga" resultado={cargaFormaResultado} compartilhar={compartilharCargaForma} />,
+      ]
+    : [
+        <CardCargaForma key="carga" resultado={cargaFormaResultado} compartilhar={compartilharCargaForma} />,
+        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} />,
+      ];
+  const cartaoAderencia = <CardAderencia key="aderencia" resultado={aderenciaResultado} compartilhar={compartilharAderencia} />;
   const cartaoBemEstar = (
     <CardBemEstar
       key="bem-estar"
-      frase={avaliacao.perfil_psicologico_frase ?? "Ainda não há sinal suficiente sobre o lado psicológico do seu retorno."}
+      frase={resumoBemEstar.frase}
+      zona={resumoBemEstar.zona}
+      ehLeituraInicial={resumoBemEstar.ehLeituraInicial}
     />
   );
   const cardsOrdenados = algumSinalDeAtencao(riscoResultado, cargaFormaResultado)
@@ -187,7 +217,7 @@ async function PainelComDiagnostico({
 
       <CardHistorico resultado={historicoResultado} />
 
-      <GradePilares />
+      <GradePilares userId={userId} />
     </div>
   );
 }

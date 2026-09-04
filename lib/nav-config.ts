@@ -6,12 +6,17 @@ export interface NavItem {
 export const navCorredor: NavItem[] = [
   { label: "Início", href: "/corredor/painel" },
   { label: "Minha Recuperação", href: "/corredor/minha-recuperacao" },
+  { label: "Nutrição", href: "/corredor/nutricao" },
+  { label: "Psicologia", href: "/corredor/psicologia/check-in" },
+  { label: "Comunidade", href: "/corredor/comunidade" },
   { label: "Perfil", href: "/corredor/perfil" },
 ];
 
 export const navProfissional: NavItem[] = [
   { label: "Início", href: "/profissional/painel" },
   { label: "Pacientes", href: "/profissional/pacientes" },
+  { label: "Nutrição", href: "/profissional/nutricao/casos" },
+  { label: "Psicologia", href: "/profissional/psicologia/fila" },
   { label: "Perfil", href: "/profissional/perfil" },
 ];
 

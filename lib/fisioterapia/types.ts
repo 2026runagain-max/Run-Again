@@ -2,6 +2,8 @@
 // Espelham o schema de supabase/migrations/0002_fisioterapia_prescricao.sql —
 // nomes de coluna em snake_case de propósito, mesma convenção de lib/auth/perfil.ts.
 
+import type { Especialidade } from "@/lib/types";
+
 export type AtendimentoStatus = "em_andamento" | "finalizado";
 
 export type CapacidadeRadar =
@@ -37,6 +39,11 @@ export interface Atendimento {
   paciente_id: string;
   profissional_id: string;
   status: AtendimentoStatus;
+  // 0007_psicologia_esportiva.sql — atendimentos passou a aceitar múltiplas
+  // especialidades sobre a mesma espinha genérica (pré-requisito de
+  // engenharia do PRD de Psicologia do Esporte, §10.2). Default
+  // 'fisioterapia' no banco preserva todo o código deste arquivo.
+  especialidade: Especialidade;
   condicao_principal: CondicaoClinica | null;
   queixa_principal: string | null;
   historico_subjetivo: string | null;

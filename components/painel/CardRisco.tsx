@@ -1,9 +1,12 @@
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { EstadoCardPainel } from "./EstadoCardPainel";
+import { RodapeAcoesCartao } from "./RodapeAcoesCartao";
+import { CompartilharEvidenciaButton } from "@/components/comunidade/CompartilharEvidenciaButton";
 import { estadosPainel, eyebrowsPainel, riscoCopy } from "@/lib/painel/copy";
 import { bandaRiscoLabel } from "@/lib/avaliacao/copy";
 import type { ResultadoPainel, RiscoResumo } from "@/lib/painel/types";
+import type { ElegibilidadeCompartilhar } from "@/lib/comunidade/types";
 
 const ORDEM_BANDA = { baixo: 0, moderado: 1, alto: 2 } as const;
 
@@ -12,8 +15,18 @@ const ORDEM_BANDA = { baixo: 0, moderado: 1, alto: 2 } as const;
  * comparação explícita ao ponto de partida quando há dado suficiente
  * (RF06-CA1). Sem dado novo, mostra a banda original com o estado "ainda é
  * seu ponto de partida" (RF06-CA2).
+ *
+ * `compartilhar` — RF01 da Comunidade: convite inline, só quando esta
+ * mesma leitura ainda não foi compartilhada (lib/comunidade/queries.ts,
+ * aindaNaoCompartilhada).
  */
-export function CardRisco({ resultado }: { resultado: ResultadoPainel<RiscoResumo> }) {
+export function CardRisco({
+  resultado,
+  compartilhar,
+}: {
+  resultado: ResultadoPainel<RiscoResumo>;
+  compartilhar?: ElegibilidadeCompartilhar | null;
+}) {
   return (
     <Card variant="pillar" className="flex flex-col gap-3">
       <Eyebrow>{eyebrowsPainel.risco}</Eyebrow>
@@ -42,6 +55,16 @@ export function CardRisco({ resultado }: { resultado: ResultadoPainel<RiscoResum
                 : riscoCopy.comparacaoEstavel(bandaRiscoLabel[resultado.data.bandaAtual])}
           </p>
         </>
+      )}
+
+      {compartilhar && (
+        <RodapeAcoesCartao>
+          <CompartilharEvidenciaButton
+            tipoEvidencia="risco"
+            chave={compartilhar.chave}
+            textoEvidencia={compartilhar.textoEvidencia}
+          />
+        </RodapeAcoesCartao>
       )}
     </Card>
   );

@@ -38,9 +38,13 @@ export async function buscarPacientes(termo: string): Promise<PacienteResumo[]> 
   const ids = pacientes.map((p) => p.id);
   if (ids.length === 0) return [];
 
+  // especialidade='fisioterapia' — atendimentos agora é compartilhado entre
+  // pilares (0007_psicologia_esportiva.sql); sem este filtro, um atendimento
+  // aberto de psicologia vazaria pro badge "ATENDIMENTO ABERTO" desta lista.
   const { data: atendimentos } = await supabase
     .from("atendimentos")
     .select("paciente_id, status, iniciado_em")
+    .eq("especialidade", "fisioterapia")
     .in("paciente_id", ids)
     .order("iniciado_em", { ascending: false });
 
@@ -57,6 +61,7 @@ export async function buscarPacientes(termo: string): Promise<PacienteResumo[]> 
   const { data: abertos } = await supabase
     .from("atendimentos")
     .select("id, paciente_id")
+    .eq("especialidade", "fisioterapia")
     .in("paciente_id", ids)
     .eq("status", "em_andamento");
 
@@ -82,12 +87,17 @@ export async function getPacienteBasico(pacienteId: string) {
   return data;
 }
 
+// especialidade='fisioterapia' nas três funções abaixo — atendimentos é
+// compartilhado entre pilares (0007_psicologia_esportiva.sql); sem o filtro,
+// um atendimento de psicologia em andamento apareceria como se fosse um
+// atendimento de fisioterapia aberto (ou entraria na timeline errada).
 export async function getAtendimentoAberto(pacienteId: string): Promise<Atendimento | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("atendimentos")
     .select("*")
     .eq("paciente_id", pacienteId)
+    .eq("especialidade", "fisioterapia")
     .eq("status", "em_andamento")
     .maybeSingle();
   return data as Atendimento | null;
@@ -99,6 +109,7 @@ export async function getAtendimentoPorId(atendimentoId: string): Promise<Atendi
     .from("atendimentos")
     .select("*")
     .eq("id", atendimentoId)
+    .eq("especialidade", "fisioterapia")
     .maybeSingle();
   return data as Atendimento | null;
 }
@@ -109,6 +120,7 @@ export async function getTimelineAtendimentos(pacienteId: string): Promise<Atend
     .from("atendimentos")
     .select("*")
     .eq("paciente_id", pacienteId)
+    .eq("especialidade", "fisioterapia")
     .order("iniciado_em", { ascending: false });
   return (data as Atendimento[]) ?? [];
 }
