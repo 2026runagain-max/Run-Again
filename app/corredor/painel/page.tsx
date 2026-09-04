@@ -19,6 +19,7 @@ import { getAvaliacaoAtual } from "@/lib/avaliacao/queries";
 import { estados } from "@/lib/avaliacao/copy";
 import { getHistoricoAtendimentosCorredorResultado } from "@/lib/fisioterapia/queries";
 import { getAderenciaResultado, getPerfilPainel, getRespostas24hResultado } from "@/lib/painel/queries";
+import { getResumoBemEstar } from "@/lib/psicologia/queries";
 import {
   algumSinalDeAtencao,
   calcularRiscoAtualizado,
@@ -122,10 +123,11 @@ async function PainelComDiagnostico({
     return <OnboardingPainel />;
   }
 
-  const [respostasResultado, aderenciaResultado, historicoResultado] = await Promise.all([
+  const [respostasResultado, aderenciaResultado, historicoResultado, resumoBemEstar] = await Promise.all([
     getRespostas24hResultado(userId),
     getAderenciaResultado(userId),
     getHistoricoAtendimentosCorredorResultado(),
+    getResumoBemEstar(userId, avaliacao),
   ]);
 
   const respostas = respostasResultado.ok ? respostasResultado.data : [];
@@ -172,7 +174,9 @@ async function PainelComDiagnostico({
   const cartaoBemEstar = (
     <CardBemEstar
       key="bem-estar"
-      frase={avaliacao.perfil_psicologico_frase ?? "Ainda não há sinal suficiente sobre o lado psicológico do seu retorno."}
+      frase={resumoBemEstar.frase}
+      zona={resumoBemEstar.zona}
+      ehLeituraInicial={resumoBemEstar.ehLeituraInicial}
     />
   );
   const cardsOrdenados = algumSinalDeAtencao(riscoResultado, cargaFormaResultado)

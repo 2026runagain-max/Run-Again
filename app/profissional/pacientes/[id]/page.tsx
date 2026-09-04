@@ -15,6 +15,8 @@ import { cargaVidaLabel, condicaoLabel } from "@/lib/fisioterapia/labels";
 import { labelPersona } from "@/lib/labels";
 import type { Persona } from "@/lib/types";
 import { getAderenciaResultado } from "@/lib/painel/queries";
+import { getSinaisCruzadosParaFisioterapia } from "@/lib/psicologia/queries";
+import { badgeSinalCruzadoPrefixo } from "@/lib/psicologia/copy";
 
 export const metadata: Metadata = { title: "Prontuário — Run Again" };
 
@@ -32,11 +34,12 @@ export default async function ProntuarioPage({
   const paciente = await getPacienteBasico(id);
   if (!paciente) notFound();
 
-  const [aberto, timeline, respostas, aderencia] = await Promise.all([
+  const [aberto, timeline, respostas, aderencia, sinaisPsicologia] = await Promise.all([
     getAtendimentoAberto(id),
     getTimelineAtendimentos(id),
     getRespostas24hDoPaciente(id),
     getAderenciaResultado(id),
+    getSinaisCruzadosParaFisioterapia(id),
   ]);
 
   return (
@@ -51,9 +54,27 @@ export default async function ProntuarioPage({
         )}
       </div>
 
-      <Button href={`/profissional/pacientes/${id}/nutricao`} variant="fire-ghost" className="self-start">
-        Ver aba Nutrição Esportiva
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <Button href={`/profissional/pacientes/${id}/nutricao`} variant="fire-ghost" className="self-start">
+          Ver aba Nutrição Esportiva
+        </Button>
+        <Button href={`/profissional/pacientes/${id}/psicologia`} variant="fire-ghost" className="self-start">
+          Ver aba Psicologia do Esporte
+        </Button>
+      </div>
+
+      {/* RF-6 — badge de sinalização cruzada: aviso de contexto, nunca
+          ajuste automático de sessão (RF-6-CA2). */}
+      {sinaisPsicologia.length > 0 && (
+        <Card variant="insight" className="flex flex-col gap-2">
+          {sinaisPsicologia.map((s) => (
+            <p key={s.id} className="text-sm font-sans text-ink">
+              <span aria-hidden="true">⚠</span> <strong>{badgeSinalCruzadoPrefixo}</strong> ({formatarData(s.criado_em)}) —{" "}
+              {s.frase}
+            </p>
+          ))}
+        </Card>
+      )}
 
       {/* Card de continuidade — RF-B3 */}
       <Card variant="pillar" className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

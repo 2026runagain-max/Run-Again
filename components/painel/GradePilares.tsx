@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/Badge";
 import { copyPilarChegando, OUTROS_PILARES } from "@/lib/painel/copy";
 import { getResumoNutricaoDashboard } from "@/lib/nutricao/queries";
 import { nutricaoStatusLabel } from "@/lib/nutricao/labels";
+import { getAvaliacaoAtual } from "@/lib/avaliacao/queries";
 
 /**
  * RF09 (painel) / RF11 (Nutrição) — um espaço nomeado por pilar do
@@ -25,7 +26,14 @@ import { nutricaoStatusLabel } from "@/lib/nutricao/labels";
  * futuro não desloca os demais — é exatamente o que aconteceu com Nutrição.
  */
 export async function GradePilares({ userId }: { userId: string }) {
-  const resumoNutricao = await getResumoNutricaoDashboard(userId);
+  const [resumoNutricao, avaliacao] = await Promise.all([
+    getResumoNutricaoDashboard(userId),
+    getAvaliacaoAtual(userId),
+  ]);
+  // RF-1.1 do PRD de Psicologia do Esporte — elegível assim que o
+  // diagnóstico inicial (Fluxo 2) está concluído, mesmo critério usado pelo
+  // check-in em si (app/corredor/psicologia/check-in/page.tsx).
+  const psicologiaAtiva = !!avaliacao?.concluida_em;
 
   return (
     <div>
@@ -65,12 +73,28 @@ export async function GradePilares({ userId }: { userId: string }) {
         </Link>
       )}
 
+      {psicologiaAtiva && (
+        <Link href="/corredor/psicologia/check-in" className="mt-4 block">
+          <Card variant="pillar" className="flex flex-col gap-2 transition-shadow hover:shadow-md">
+            <Badge>ATIVO</Badge>
+            <h3 className="font-display text-2xl text-ink">Psicologia do Esporte</h3>
+            <p className="text-sm font-sans text-mid">Seu check-in periódico de como você está por dentro — direto pra quem te acompanha.</p>
+          </Card>
+        </Link>
+      )}
+
       <p className="mt-4 text-sm font-sans text-mid">{copyPilarChegando}</p>
 
       <ul className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
         {!resumoNutricao.existe && (
           <li className="flex items-center justify-between gap-3 rounded-xl border border-dashed border-mid/35 px-4 py-3">
             <span className="font-sans text-sm font-semibold text-ink">Nutrição esportiva</span>
+            <span className="shrink-0 text-[10px] font-bold font-sans uppercase tracking-[0.14em] text-mid">Em construção</span>
+          </li>
+        )}
+        {!psicologiaAtiva && (
+          <li className="flex items-center justify-between gap-3 rounded-xl border border-dashed border-mid/35 px-4 py-3">
+            <span className="font-sans text-sm font-semibold text-ink">Psicologia do esporte</span>
             <span className="shrink-0 text-[10px] font-bold font-sans uppercase tracking-[0.14em] text-mid">Em construção</span>
           </li>
         )}
