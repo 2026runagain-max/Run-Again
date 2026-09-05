@@ -40,7 +40,7 @@ export default function BlogPage() {
         {destaques.length === 0 ? (
           <EmptyState
             className="mt-6"
-            subtitulo="Ainda estamos publicando os primeiros artigos. Enquanto isso, explora os pilares abaixo ou entra na lista de fundadoras pra saber quando sair o primeiro."
+            subtitulo="Ainda estamos publicando os primeiros artigos. Enquanto isso, explora os pilares abaixo ou entra na lista de fundadores pra saber quando sair o primeiro."
           />
         ) : (
           <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -80,7 +80,7 @@ export default function BlogPage() {
         <Card variant="insight">
           <Eyebrow>Não perca o próximo artigo</Eyebrow>
           <h2 className="mt-2 font-display text-2xl text-ink">
-            Entra na lista de fundadoras
+            Entra na lista de fundadores
           </h2>
           <p className="mt-2 font-sans text-sm text-mid">
             Mesmo cadastro da home — sem cartão, sem checkout.

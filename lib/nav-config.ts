@@ -5,7 +5,7 @@ export interface NavItem {
 
 export const navCorredor: NavItem[] = [
   { label: "Início", href: "/corredor/painel" },
-  { label: "Minha Recuperação", href: "/corredor/minha-recuperacao" },
+  { label: "Treinos Recomendados", href: "/corredor/minha-recuperacao" },
   { label: "Nutrição", href: "/corredor/nutricao" },
   { label: "Psicologia", href: "/corredor/psicologia/check-in" },
   { label: "Comunidade", href: "/corredor/comunidade" },
@@ -24,7 +24,7 @@ export const navProfissional: NavItem[] = [
 // esquerda dos CTAs de conversão.
 export const navPublico: NavItem[] = [
   { label: "Blog", href: "/blog" },
-  { label: "Explica", href: "/explica" },
+  { label: "Run Explica", href: "/explica" },
   { label: "Método", href: "/metodo" },
   { label: "Sobre", href: "/sobre" },
 ];

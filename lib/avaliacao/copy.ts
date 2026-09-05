@@ -379,6 +379,17 @@ export const diagnosticoCopy = {
   avisoHipotese:
     "Isso é um ponto de partida pra conversa com quem vai te acompanhar — não é laudo, nem substitui avaliação clínica presencial.",
   bandaRiscoLabel: "Como seu corpo chega até aqui",
+  // QA (feedback da Marina, item 1): esta tela mostrava a banda de risco
+  // (baixo/moderado/alto) assim que o questionário terminava — antes de
+  // qualquer profissional ter olhado o caso. É exatamente o "risco baixo"
+  // que o item 1 proíbe mostrar cedo demais: o rótulo abaixo substitui
+  // bandaRiscoLabel/avaliacao.banda_risco_frase inteiro enquanto não existe
+  // nenhum atendimento iniciado (ver getAtendimentoIniciadoResultado em
+  // app/corredor/diagnostico/page.tsx) — mesma regra já aplicada em
+  // CardRisco/HeroPainel do painel.
+  bandaRiscoLabelEmAvaliacao: "Em avaliação",
+  bandaRiscoFraseEmAvaliacao:
+    "Sua banda de risco aparece aqui assim que a Equipe Run Again avaliar seu caso — o questionário sozinho não decide isso.",
   perfilBiomecanicoLabel: "Hipótese biomecânica inicial",
   perfilBiomecanicoAviso: "Isso é autorrelato, não avaliação física — o profissional confirma isso na prática.",
   perfilPsicologicoLabel: "Como sua cabeça chega até aqui",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Card } from "@/components/ui/Card";
+import { EditarPerfilForm } from "@/components/perfil/EditarPerfilForm";
 import { getPerfilCompleto } from "@/lib/auth/perfil";
 import { labelPersona } from "@/lib/labels";
 
@@ -38,12 +39,6 @@ export default async function PerfilCorredorPage() {
         <Card variant="pillar" className="flex flex-1 flex-col gap-4">
           <div>
             <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
-              Nome
-            </p>
-            <p className="font-sans text-ink">{perfil?.nome}</p>
-          </div>
-          <div>
-            <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">
               E-mail
             </p>
             <p className="font-sans text-ink">{perfil?.email}</p>
@@ -60,6 +55,20 @@ export default async function PerfilCorredorPage() {
           </div>
         </Card>
       </div>
+
+      {/* Item 14 (feedback da Marina): edição de informações básicas do
+          perfil — nome, foto, Instagram e Strava. E-mail e persona ficam
+          de fora de propósito (e-mail é identidade de login; persona é
+          decidida pelo onboarding, não editável aqui). */}
+      <Card variant="pillar" className="flex flex-col gap-2">
+        <p className="text-xs font-sans font-semibold uppercase tracking-wide text-mid">Editar perfil</p>
+        <EditarPerfilForm
+          nomeInicial={perfil?.nome ?? ""}
+          instagramInicial={perfil?.instagram ?? ""}
+          stravaInicial={perfil?.strava ?? ""}
+          fotoUrlInicial={perfil?.foto_url ?? null}
+        />
+      </Card>
     </div>
   );
 }

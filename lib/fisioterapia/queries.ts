@@ -91,6 +91,36 @@ export async function getPacienteBasico(pacienteId: string) {
 // compartilhado entre pilares (0007_psicologia_esportiva.sql); sem o filtro,
 // um atendimento de psicologia em andamento apareceria como se fosse um
 // atendimento de fisioterapia aberto (ou entraria na timeline errada).
+// Feedback da Marina (teste real, 2026-09): o painel mostrava "Risco baixo"
+// e "Ainda não temos seu retorno de ontem — responda como se sentiu" pra
+// quem já respondeu o questionário de diagnóstico mas cujo caso nenhum
+// profissional ainda abriu — como se nada tivesse começado, ou pior, como
+// se o risco já estivesse validado. Nenhuma das duas é segura: falta o
+// atendimento clínico de verdade acontecer.
+//
+// Esta função responde só "existe atendimento de fisioterapia pra este
+// paciente, de qualquer status?" — sem isso, o painel (app/corredor/painel/
+// page.tsx) não tem como distinguir "questionário respondido, aguardando a
+// equipe abrir o caso" de "protocolo já em andamento". `ok: false` (erro de
+// leitura) é tratado no chamador como "não confirmado" — o lado seguro é
+// assumir que a avaliação profissional ainda não aconteceu, nunca o
+// contrário.
+export async function getAtendimentoIniciadoResultado(
+  pacienteId: string,
+): Promise<{ ok: true; data: boolean } | { ok: false }> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("atendimentos")
+    .select("id")
+    .eq("paciente_id", pacienteId)
+    .eq("especialidade", "fisioterapia")
+    .limit(1)
+    .maybeSingle();
+
+  if (error) return { ok: false };
+  return { ok: true, data: !!data };
+}
+
 export async function getAtendimentoAberto(pacienteId: string): Promise<Atendimento | null> {
   const supabase = await createClient();
   const { data } = await supabase

@@ -26,12 +26,12 @@ const faq = [
   {
     pergunta: "Em que formato eu recebo o ebook?",
     resposta:
-      "[FORMATO DE ENTREGA A DEFINIR]. Se você entrar pela lista de fundadoras, ele chega no seu e-mail assim que o cadastro é confirmado.",
+      "[FORMATO DE ENTREGA A DEFINIR]. Se você entrar pela lista de fundadores, ele chega no seu e-mail assim que o cadastro é confirmado.",
   },
   {
     pergunta: "Preciso pagar pra ter acesso?",
     resposta:
-      "Não, se você entrar na lista de fundadoras: o ebook é o bônus de quem se cadastra (valor percebido de R$47). A compra avulsa abaixo é pra quem já tem convite de beta ou não quer entrar na lista agora.",
+      "Não, se você entrar na lista de fundadores: o ebook é o bônus de quem se cadastra (valor percebido de R$47). A compra avulsa abaixo é pra quem já tem convite de beta ou não quer entrar na lista agora.",
   },
   {
     pergunta: "Isso é o mesmo protocolo do app Run Again?",
@@ -141,13 +141,18 @@ export default function EbookPage() {
           <Card variant="ghost" className="flex flex-col gap-4 p-6">
             <Eyebrow dark>Caminho 1 — de graça</Eyebrow>
             <h2 className="font-display text-2xl text-white">
-              Entra na lista de fundadoras
+              Entra na lista de fundadores
             </h2>
             <p className="font-sans text-sm text-silver">
               Ebook liberado assim que você se cadastra — sem cartão, sem checkout.
             </p>
             <CartaoConversao className="p-4 shadow-none sm:p-4">
-              <ListaFundadorasForm origem="ebook" />
+              {/* QA (feedback da Marina): o microtexto padrão do componente
+                  ("Grátis. Sem cartão...") repetia o parágrafo acima e, pior,
+                  soa como se o EBOOK fosse grátis — ele é vendido; o que é
+                  grátis é entrar na lista. Suprimido aqui pra não reforçar
+                  essa leitura errada; o parágrafo acima já cobre o recado. */}
+              <ListaFundadorasForm origem="ebook" microtexto="" />
             </CartaoConversao>
           </Card>
 
@@ -177,7 +182,7 @@ export default function EbookPage() {
         <p className="mt-3 font-sans text-sm leading-relaxed text-mid">
           O Run Again está em construção. Não vamos te vender uma garantia de
           resultado que não podemos sustentar ainda — o que garantimos é que este guia
-          passa pelas mãos de quem tem mais de 25 anos de fisioterapia clínica.
+          passa pelas mãos de quem tem 16 anos de fisioterapia clínica.
         </p>
 
         <h2 className="mt-10 font-display text-2xl text-ink">Perguntas frequentes</h2>
@@ -202,9 +207,16 @@ export default function EbookPage() {
             Volta de olhos abertos.
           </h2>
           <CartaoConversao>
+            {/* QA (feedback da Marina): mesmo ajuste da seção "Caminho 1" —
+                sem microtexto próprio, o padrão do componente ("Grátis. Sem
+                cartão...") lia como se o ebook (produto vendido) fosse
+                grátis. Este CTA final é o mesmo caminho gratuito da lista de
+                fundadores — o texto abaixo deixa isso explícito, sem usar a
+                palavra "grátis" solta perto do nome do ebook. */}
             <ListaFundadorasForm
               origem="ebook"
               ctaLabel="Quero o ebook Corrida sem Lesão"
+              microtexto="Isso te coloca na lista de fundadores — o ebook é o bônus de quem entra, sem cartão."
             />
           </CartaoConversao>
         </div>

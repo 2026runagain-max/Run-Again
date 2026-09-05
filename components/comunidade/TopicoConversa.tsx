@@ -16,7 +16,15 @@ function formatarData(iso: string) {
 }
 
 /** RF05 — mesmo mecanismo de PostEvidencia: mostra "✓ Removido" por um instante antes de recarregar a lista. */
-function RespostaConversa({ resposta, viewerId }: { resposta: RespostaComunidade; viewerId: string }) {
+function RespostaConversa({
+  resposta,
+  viewerId,
+  onResponder,
+}: {
+  resposta: RespostaComunidade;
+  viewerId: string;
+  onResponder: () => void;
+}) {
   const router = useRouter();
   const [removido, setRemovido] = useState(false);
 
@@ -44,7 +52,18 @@ function RespostaConversa({ resposta, viewerId }: { resposta: RespostaComunidade
         </div>
         <p className="mt-1 font-sans text-sm leading-relaxed text-ink">{resposta.corpo}</p>
 
-        <div className="mt-1">
+        <div className="mt-1 flex items-center gap-4">
+          {/* QA (feedback da Marina): não existia como responder a um
+              comentário específico, só ao tópico como um todo. Em vez de
+              aninhamento de verdade, este botão abre o mesmo formulário de
+              resposta do tópico já pré-preenchido com "@Nome". */}
+          <button
+            type="button"
+            onClick={onResponder}
+            className={CLASSE_LINK_DISCRETO}
+          >
+            {comunidadeCopy.botaoResponderAbrir}
+          </button>
           {resposta.autor_id === viewerId ? (
             <ConfirmActionButton
               label={comunidadeCopy.botaoExcluir}
@@ -75,6 +94,10 @@ function RespostaConversa({ resposta, viewerId }: { resposta: RespostaComunidade
 export function TopicoConversa({ topico, viewerId }: { topico: TopicoComunidade; viewerId: string }) {
   const router = useRouter();
   const [respondendo, setRespondendo] = useState(false);
+  // QA (feedback da Marina): guarda a menção pré-preenchida quando a
+  // resposta veio do botão "Responder" de um comentário específico, em vez
+  // do botão do tópico — undefined quando é o tópico mesmo.
+  const [mencao, setMencao] = useState<string | undefined>(undefined);
   const [removido, setRemovido] = useState(false);
   const souAutorDoTopico = topico.autor_id === viewerId;
 
@@ -110,7 +133,10 @@ export function TopicoConversa({ topico, viewerId }: { topico: TopicoComunidade;
           <div className="mt-3 flex items-center gap-4 border-t border-mid/10 pt-3">
             <button
               type="button"
-              onClick={() => setRespondendo((v) => !v)}
+              onClick={() => {
+                setMencao(undefined);
+                setRespondendo((v) => !v);
+              }}
               className="text-sm font-semibold font-sans text-fire-text hover:underline"
             >
               {comunidadeCopy.botaoResponderAbrir}
@@ -132,18 +158,37 @@ export function TopicoConversa({ topico, viewerId }: { topico: TopicoComunidade;
             )}
           </div>
 
-          {respondendo && (
-            <div className="mt-4 border-t border-mid/10 pt-4">
-              <ResponderTopicoForm topicoId={topico.id} onPublicado={() => setRespondendo(false)} />
-            </div>
-          )}
-
           {topico.respostas.length > 0 && (
             <ul className="mt-4 flex flex-col gap-3 border-t border-mid/10 pt-4">
               {topico.respostas.map((resposta) => (
-                <RespostaConversa key={resposta.id} resposta={resposta} viewerId={viewerId} />
+                <RespostaConversa
+                  key={resposta.id}
+                  resposta={resposta}
+                  viewerId={viewerId}
+                  onResponder={() => {
+                    setMencao(`@${resposta.autor_nome} `);
+                    setRespondendo(true);
+                  }}
+                />
               ))}
             </ul>
+          )}
+
+          {/* QA (feedback da Marina): formulário reposicionado pra depois da
+              lista de respostas — abrir "Responder" num comentário lá
+              embaixo não deveria jogar o campo lá em cima, longe do que a
+              pessoa acabou de ler. */}
+          {respondendo && (
+            <div className="mt-4 border-t border-mid/10 pt-4">
+              <ResponderTopicoForm
+                topicoId={topico.id}
+                valorInicial={mencao}
+                onPublicado={() => {
+                  setRespondendo(false);
+                  setMencao(undefined);
+                }}
+              />
+            </div>
           )}
         </div>
       </div>

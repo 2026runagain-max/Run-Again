@@ -52,7 +52,7 @@ export default async function BlogPilarPage({
       {artigos.length === 0 ? (
         <EmptyState
           className="mt-10"
-          subtitulo="Os primeiros artigos deste pilar estão em produção — entra na lista de fundadoras na home pra saber quando saírem."
+          subtitulo="Os primeiros artigos deste pilar estão em produção — entra na lista de fundadores na home pra saber quando saírem."
         />
       ) : (
         <ul className="mt-10 flex flex-col gap-5">

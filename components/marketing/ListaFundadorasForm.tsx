@@ -25,7 +25,7 @@ export interface ListaFundadorasFormProps {
  */
 export function ListaFundadorasForm({
   origem,
-  ctaLabel = "Quero garantir minha vaga de fundadora",
+  ctaLabel = "Quero garantir minha vaga de fundador",
   microtexto = "Grátis. Sem cartão. Você só perde a vaga se não entrar agora.",
   className,
 }: ListaFundadorasFormProps) {
@@ -87,7 +87,7 @@ export function ListaFundadorasForm({
     return (
       <SuccessState
         titulo="Feito."
-        subtitulo="Você já está na lista de fundadoras. O ebook Corrida sem Lesão chega no seu e-mail, e você é a primeira a saber quando as vagas de acesso antecipado abrirem."
+        subtitulo="Você já está na lista de fundadores. O ebook Corrida sem Lesão chega no seu e-mail, e você é a primeira a saber quando as vagas de acesso antecipado abrirem."
         className={className}
       />
     );

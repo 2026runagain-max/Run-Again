@@ -6,8 +6,25 @@ import { Button } from "@/components/ui/Button";
 import { responderTopicoComunidadeAction } from "@/lib/comunidade/actions";
 import { comunidadeCopy } from "@/lib/comunidade/copy";
 
-/** RF07 — responder a um tópico existente. Mesmo mecanismo de reset de CriarTopicoForm. */
-export function ResponderTopicoForm({ topicoId, onPublicado }: { topicoId: string; onPublicado?: () => void }) {
+/**
+ * RF07 — responder a um tópico existente. Mesmo mecanismo de reset de
+ * CriarTopicoForm.
+ *
+ * `valorInicial` — QA (feedback da Marina): "não existe como responder a
+ * um comentário", só ao tópico. Em vez de aninhamento de verdade (exigiria
+ * coluna nova, migration, árvore de resposta — desproporcional pro beta),
+ * cada resposta ganhou um botão "Responder" que pré-preenche este campo com
+ * "@Nome" — mesmo formulário único do tópico, sem estrutura nova.
+ */
+export function ResponderTopicoForm({
+  topicoId,
+  valorInicial,
+  onPublicado,
+}: {
+  topicoId: string;
+  valorInicial?: string;
+  onPublicado?: () => void;
+}) {
   const [state, formAction, pending] = useActionState(responderTopicoComunidadeAction, null);
   const [formKey, setFormKey] = useState(0);
 
@@ -35,6 +52,8 @@ export function ResponderTopicoForm({ topicoId, onPublicado }: { topicoId: strin
         name="corpo"
         label={comunidadeCopy.botaoResponder}
         placeholder={comunidadeCopy.respostaPlaceholder}
+        defaultValue={valorInicial}
+        autoFocus={!!valorInicial}
         maxLength={2000}
         required
         className="min-h-16"

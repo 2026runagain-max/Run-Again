@@ -15,7 +15,7 @@ const ROTULO_POR_PREFIXO: [string, string][] = [
   ["/corredor/nutricao", "Nutrição"],
   ["/corredor/psicologia", "Psicologia do Esporte"],
   ["/corredor/comunidade", "Comunidade"],
-  ["/corredor/minha-recuperacao", "Minha Recuperação"],
+  ["/corredor/minha-recuperacao", "Treinos Recomendados"],
   ["/corredor/painel", "seu painel"],
 ];
 

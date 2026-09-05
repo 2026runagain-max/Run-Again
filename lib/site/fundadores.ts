@@ -14,7 +14,10 @@ export const fundadores: Fundador[] = [
   {
     inicial: "B",
     nome: "Bruna",
-    papel: "Fundadora, Visão e Produto",
+    // QA (feedback da Marina, item 5): linguagem voltada ao cliente/marca
+    // no masculino plural/genérico por padrão — "Fundador" aqui, não
+    // "Fundadora", mesmo descrevendo a Bruna.
+    papel: "Fundador, Visão e Produto",
     texto:
       "Bruna era só mais uma corredora amadora até o dia em que uma dor no joelho virou meses parada. Fisioterapia que não conversava com o treino. Treino que não considerava as 8 horas de trabalho puxando o corpo antes mesmo de calçar o tênis. E a sensação — nunca dita em voz alta — de que talvez ela tivesse “exagerado” num hobby que deveria ser leve. A volta só aconteceu de verdade quando o cuidado parou de ser genérico. Foi aí que nasceu a pergunta que virou o Run Again: por que o corredor amador tem acesso a menos cuidado do que um atleta profissional, se o corpo dele carrega o mesmo risco — e ainda precisa aguentar o expediente inteiro depois do treino?",
   },
@@ -23,7 +26,7 @@ export const fundadores: Fundador[] = [
     nome: "Gustavo",
     papel: "Fundador, Direção Científica",
     texto:
-      "Gustavo é fisioterapeuta há mais de 25 anos, maratonista e está se preparando para o Ironman. Assina cada protocolo do Run Again com o mesmo rigor que usa com os próprios atletas — porque, pra ele, amador não é sinônimo de “pode ser mais leve”. É sinônimo de alguém que precisa de mais critério, porque não tem o privilégio de descansar por obrigação como um profissional.",
+      "Gustavo é fisioterapeuta há 16 anos, maratonista e está se preparando para o Ironman. Assina cada protocolo do Run Again com o mesmo rigor que usa com os próprios atletas — porque, pra ele, amador não é sinônimo de “pode ser mais leve”. É sinônimo de alguém que precisa de mais critério, porque não tem o privilégio de descansar por obrigação como um profissional.",
   },
 ];
 

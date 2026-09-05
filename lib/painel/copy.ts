@@ -18,11 +18,31 @@ export const onboardingPainel = {
 };
 
 export const estadosPainel = {
+  // Feedback da Marina (teste real, 2026-09): esta frase pedia pra ELA
+  // responder "como se sentiu na sessão" — mas ela nunca teve sessão
+  // nenhuma prescrita ainda, porque nenhum profissional abriu o caso dela.
+  // A bola está com a Equipe, não com ela. Agora só aparece quando já existe
+  // atendimento (sessão pode legitimamente estar esperando resposta dela);
+  // enquanto não existe atendimento, o hero usa aguardandoAvaliacaoHero.
   vazioHero:
     "Ainda não temos seu retorno de ontem. Assim que você responder como se sentiu na sessão, esta tela passa a se ajustar a você.",
+  aguardandoAvaliacaoHero:
+    "Recebemos suas respostas. Nossa equipe está avaliando seu caso e volta com um plano em breve.",
   vazioAderencia: "Sem sessão prescrita ainda, não há o que somar aqui. Isso muda assim que seu protocolo começar.",
   vazioRisco:
     "Seu ponto de partida é o do seu diagnóstico. Depois da primeira sessão, esta tela começa a mostrar se e como ele está mudando.",
+  // Feedback da Marina: o card de risco mostrava a banda calculada a partir
+  // do autorrelato do questionário (ex.: "Risco baixo") como se já fosse
+  // uma leitura clínica validada, mesmo sem nenhum profissional ter avaliado
+  // o caso ainda — no pior cenário (banda "baixo"), isso passa falsa
+  // sensação de segurança pra alguém que relatou lesão. Enquanto não existe
+  // atendimento de fisioterapia pra este paciente, o card mostra só isto,
+  // nunca a banda.
+  emAvaliacaoRisco: {
+    label: "Em avaliação",
+    frase:
+      "Recebemos suas respostas — sua banda de risco aparece aqui assim que a Equipe Run Again avaliar seu caso, não antes.",
+  },
   vazioCargaForma:
     "Ainda não há resposta de 24h suficiente para calcular sua carga desta semana. Isso muda assim que você responder à próxima sessão.",
   vazioHistorico: "Ainda não há atendimento concluído. Assim que um for finalizado, ele aparece aqui.",
