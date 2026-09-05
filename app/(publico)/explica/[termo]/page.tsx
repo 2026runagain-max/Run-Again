@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (!termo) return { title: "Termo não encontrado — Run Again" };
 
   return {
-    title: `${termo.termo} — Run Again Explica`,
+    title: `${termo.termo} — Run Explica`,
     description: termo.resumo,
   };
 }
@@ -39,11 +39,11 @@ export default async function TermoPage({
     <main className="mx-auto max-w-2xl px-4 py-16 sm:px-6">
       <p className="font-sans text-sm text-mid">
         <Link href="/explica" className="hover:underline">
-          Run Again Explica
+          Run Explica
         </Link>
       </p>
 
-      <Eyebrow className="mt-4">Run Again Explica</Eyebrow>
+      <Eyebrow className="mt-4">Run Explica</Eyebrow>
       <h1 className="mt-2 font-display text-4xl leading-tight text-ink">{termo.termo}</h1>
       <p className="mt-3 font-sans text-xs text-mid">
         Revisado por {termo.revisorNome} ({termo.revisorCredencial})
@@ -60,7 +60,7 @@ export default async function TermoPage({
       <Card variant="insight" className="mt-12">
         <Eyebrow>Continue por aqui</Eyebrow>
         <h2 className="mt-2 font-display text-2xl text-ink">
-          Entra na lista de fundadoras
+          Entra na lista de fundadores
         </h2>
         <ListaFundadorasForm origem="explica" className="mt-5" />
       </Card>

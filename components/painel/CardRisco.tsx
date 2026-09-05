@@ -19,19 +19,33 @@ const ORDEM_BANDA = { baixo: 0, moderado: 1, alto: 2 } as const;
  * `compartilhar` — RF01 da Comunidade: convite inline, só quando esta
  * mesma leitura ainda não foi compartilhada (lib/comunidade/queries.ts,
  * aindaNaoCompartilhada).
+ *
+ * `atendimentoIniciado` — feedback da Marina (teste real, 2026-09): sem
+ * isto, o card mostrava a banda autorrelatada do questionário (inclusive
+ * "Risco baixo") como se já fosse uma leitura clínica confirmada, mesmo sem
+ * nenhum profissional ter avaliado o caso. Enquanto for `false`, o card
+ * nunca mostra banda nenhuma — só "Em avaliação", seja qual for o resultado
+ * do autorrelato.
  */
 export function CardRisco({
   resultado,
   compartilhar,
+  atendimentoIniciado,
 }: {
   resultado: ResultadoPainel<RiscoResumo>;
   compartilhar?: ElegibilidadeCompartilhar | null;
+  atendimentoIniciado: boolean;
 }) {
   return (
     <Card variant="pillar" className="flex flex-col gap-3">
       <Eyebrow>{eyebrowsPainel.risco}</Eyebrow>
 
-      {!resultado.ok ? (
+      {!atendimentoIniciado ? (
+        <>
+          <p className="font-display text-4xl leading-none text-ink">{estadosPainel.emAvaliacaoRisco.label}</p>
+          <EstadoCardPainel texto={estadosPainel.emAvaliacaoRisco.frase} />
+        </>
+      ) : !resultado.ok ? (
         <EstadoCardPainel erro />
       ) : !resultado.data.temDadoNovo ? (
         <>

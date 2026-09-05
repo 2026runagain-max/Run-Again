@@ -14,7 +14,7 @@ import { fundadores, fechamentoQuemSomos } from "@/lib/site/fundadores";
 export const metadata: Metadata = {
   title: "Run Again — Volte a correr forte, sem se machucar de novo",
   description:
-    "O primeiro ecossistema que junta fisioterapia, preparação física, nutrição e psicologia do esporte numa jornada só. Entre na lista de fundadoras.",
+    "O primeiro ecossistema que junta fisioterapia, preparação física, nutrição e psicologia do esporte numa jornada só. Entre na lista de fundadores.",
 };
 
 const beneficios = [
@@ -38,7 +38,7 @@ const provas = [
   {
     titulo: "Ciência aplicada + vivência real",
     texto:
-      "Mais de 25 anos de fisioterapia clínica assinando os protocolos, e alguém que viveu a lesão, o medo e a volta liderando o produto.",
+      "16 anos de fisioterapia clínica assinando os protocolos, e alguém que viveu a lesão, o medo e a volta liderando o produto.",
   },
 ];
 
@@ -62,7 +62,7 @@ const errosDoMercado = [
 
 const oferta = [
   "Prioridade de acesso quando o app abrir — você entra antes de quem chegar depois.",
-  "Preço de fundadora travado — quando abrir pro público, a assinatura Run Again deve custar entre R$97 e R$197 por mês (valor sujeito a confirmação). Quem está na lista agora trava a condição mais baixa, pelo tempo em que continuar assinando.",
+  "Preço de fundador travado — quando abrir pro público, a assinatura Run Again deve custar entre R$97 e R$197 por mês (valor sujeito a confirmação). Quem está na lista agora trava a condição mais baixa, pelo tempo em que continuar assinando.",
   "Ebook “Corrida sem Lesão” de bônus, liberado assim que você entra na lista (valor percebido: R$47).",
   "Acesso aos bastidores da construção do produto — grupo fechado onde você ajuda a moldar o que o Run Again vira antes do lançamento público.",
 ];
@@ -76,12 +76,12 @@ const faq = [
   {
     pergunta: "Preciso ser atleta de verdade pra usar?",
     resposta:
-      "Não. O Run Again foi criado por uma corredora amadora, pra corredores amadores. Você não precisa de currículo esportivo — precisa querer treinar com inteligência.",
+      "Não. O Run Again foi criado por um corredor amador, pra corredores amadores. Você não precisa de currículo esportivo — precisa querer treinar com inteligência.",
   },
   {
     pergunta: "Quando o app lança?",
     resposta:
-      "Estamos na fase de construção e teste com um grupo seleto. Quem está na lista de fundadoras é avisada em primeira mão, antes de qualquer anúncio público.",
+      "Estamos na fase de construção e teste com um grupo seleto. Quem está na lista de fundadores é avisado em primeira mão, antes de qualquer anúncio público.",
   },
   {
     pergunta: "O que acontece depois que eu entro na lista?",
@@ -102,14 +102,14 @@ export default function LandingPage() {
       <section className="bg-ink px-4 py-20 sm:px-6">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-10 text-center">
           <div>
-            <Eyebrow dark>Lista de fundadoras · vagas limitadas na fase atual</Eyebrow>
+            <Eyebrow dark>Lista de fundadores · vagas limitadas na fase atual</Eyebrow>
             <h1 className="mx-auto mt-4 max-w-3xl font-display text-5xl leading-tight text-white sm:text-6xl">
               Volte a correr forte — <span className="text-fire">sem se machucar de novo</span>.
             </h1>
             <p className="mx-auto mt-5 max-w-xl font-sans text-base leading-relaxed text-silver">
               O primeiro ecossistema que junta fisioterapia, preparação física, nutrição e
               psicologia do esporte numa jornada só — criado por quem viveu o
-              medo de voltar, e assinado por quem trata corredores há mais de 25 anos.
+              medo de voltar, e assinado por quem trata corredores há 16 anos.
             </p>
           </div>
 
@@ -312,7 +312,7 @@ export default function LandingPage() {
           <CartaoConversao>
             <ListaFundadorasForm
               origem="cta-intermediario"
-              ctaLabel="Garantir minha vaga de fundadora"
+              ctaLabel="Garantir minha vaga de fundador"
             />
           </CartaoConversao>
         </div>
@@ -320,7 +320,7 @@ export default function LandingPage() {
 
       {/* 10. Oferta — condição de fundadora */}
       <section className="mx-auto max-w-3xl px-4 py-20 sm:px-6">
-        <Eyebrow>Condição de fundadora</Eyebrow>
+        <Eyebrow>Condição de fundador</Eyebrow>
         <h2 className="mt-2 font-display text-3xl text-ink sm:text-4xl">
           O que você garante entrando pra lista agora
         </h2>
@@ -337,7 +337,7 @@ export default function LandingPage() {
         </ol>
 
         <p className="mt-8 font-sans text-base font-semibold text-ink">
-          R$0 hoje. Sem cartão. Só a sua vaga garantida antes que a fase de fundadoras
+          R$0 hoje. Sem cartão. Só a sua vaga garantida antes que a fase de fundadores
           feche.
         </p>
       </section>
@@ -388,7 +388,7 @@ export default function LandingPage() {
           <p className="font-sans text-sm leading-relaxed text-ink">
             Estamos testando o Run Again com um grupo pequeno de propósito — é assim
             que cada protocolo sai validado, não só bonito no papel. Isso significa que
-            a fase de fundadoras tem vagas limitadas de verdade.
+            a fase de fundadores tem vagas limitadas de verdade.
           </p>
         </Card>
       </section>
@@ -406,7 +406,7 @@ export default function LandingPage() {
             </p>
           </div>
           <CartaoConversao>
-            <ListaFundadorasForm origem="cta-final" ctaLabel="Quero minha vaga de fundadora" />
+            <ListaFundadorasForm origem="cta-final" ctaLabel="Quero minha vaga de fundador" />
           </CartaoConversao>
         </div>
       </section>

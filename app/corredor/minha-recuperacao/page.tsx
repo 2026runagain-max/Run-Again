@@ -5,7 +5,7 @@ import { OnboardingPrescricao } from "@/components/fisioterapia/OnboardingPrescr
 import { getPerfilCorredorPrescricao, getSessaoVisivelMaisRecente } from "@/lib/fisioterapia/queries";
 import { corredorCopy } from "@/lib/fisioterapia/copy";
 
-export const metadata: Metadata = { title: "Minha Recuperação — Run Again" };
+export const metadata: Metadata = { title: "Treinos Recomendados — Run Again" };
 
 export default async function MinhaRecuperacaoPage() {
   const perfil = await getPerfilCorredorPrescricao();
@@ -21,9 +21,9 @@ export default async function MinhaRecuperacaoPage() {
     <div className="flex flex-col gap-6">
       <div>
         <p className="text-[10px] font-bold font-sans uppercase tracking-[0.16em] text-fire-text">
-          SEU PROTOCOLO
+          TREINOS RECOMENDADOS
         </p>
-        <h1 className="mt-1 font-display text-3xl text-ink">Minha recuperação</h1>
+        <h1 className="mt-1 font-display text-3xl text-ink">Treinos recomendados</h1>
       </div>
 
       {!sessao ? (

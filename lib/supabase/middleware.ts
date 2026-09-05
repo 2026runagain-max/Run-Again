@@ -69,7 +69,7 @@ export async function updateSession(request: NextRequest) {
     const { data: perfil } = await supabase.from("usuarios").select("persona").eq("id", user.id).single();
     if (!perfil?.persona) {
       // QA do beta: antes desta linha, o redirecionamento era mudo — quem
-      // clicava em Nutrição/Psicologia/Comunidade/Minha Recuperação antes
+      // clicava em Nutrição/Psicologia/Comunidade/Treinos Recomendados antes
       // de terminar a avaliação caía de volta na mesma tela sem nenhuma
       // explicação (achado como "ponto sem saída" na varredura de QA). O
       // Header agora esconde esses links nesse estado (lib/nav-config.ts),

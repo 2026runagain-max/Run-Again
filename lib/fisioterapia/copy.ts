@@ -4,7 +4,12 @@
 // todo o produto (--fire para erro, ícone de check para sucesso — nunca cor).
 
 export const onboarding = {
-  eyebrow: "SEU PROTOCOLO",
+  // QA (feedback da Marina): rótulo desta seção renomeado de "Seu Protocolo"
+  // pra "Treinos Recomendados" — mesmo ajuste do h1 da página e do item de
+  // menu (lib/nav-config.ts). "Protocolo"/"recuperação" reforçavam o mito
+  // de que fisioterapia é só reabilitação de lesão; a marca é sobre
+  // fortalecimento.
+  eyebrow: "TREINOS RECOMENDADOS",
   titulo: "Isso aqui não é um plano de treino.",
   tituloDestaque: "É o retorno sendo acompanhado de verdade.",
   corpo:

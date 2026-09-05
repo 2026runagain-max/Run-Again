@@ -87,7 +87,7 @@ export default async function ArtigoPage({
       <Card variant="insight" className="mt-12">
         <Eyebrow>Continue por aqui</Eyebrow>
         <h2 className="mt-2 font-display text-2xl text-ink">
-          Entra na lista de fundadoras
+          Entra na lista de fundadores
         </h2>
         <p className="mt-2 font-sans text-sm text-mid">
           Sem cartão, sem checkout — só pra saber quando o Run Again abrir.

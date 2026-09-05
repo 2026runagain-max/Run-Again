@@ -7,7 +7,7 @@ import { ListaFundadorasForm } from "@/components/marketing/ListaFundadorasForm"
 import { getTermos } from "@/lib/explica/content";
 
 export const metadata: Metadata = {
-  title: "Run Again Explica — Run Again",
+  title: "Run Explica — Run Again",
   description:
     "Glossário de termos de fisioterapia, preparo físico, nutrição esportiva e psicologia do esporte, explicados em linguagem direta para o corredor amador.",
 };
@@ -19,7 +19,7 @@ export default function ExplicaPage() {
     <main>
       <section className="bg-ink px-4 py-20 sm:px-6">
         <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow dark>Run Again Explica</Eyebrow>
+          <Eyebrow dark>Run Explica</Eyebrow>
           <h1 className="mt-2 font-display text-4xl leading-tight text-white sm:text-5xl">
             Os termos do seu retorno, sem jargão.
           </h1>
@@ -32,7 +32,7 @@ export default function ExplicaPage() {
 
       <section className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         {termos.length === 0 ? (
-          <EmptyState subtitulo="Os primeiros termos estão em produção — entra na lista de fundadoras pra saber quando saírem." />
+          <EmptyState subtitulo="Os primeiros termos estão em produção — entra na lista de fundadores pra saber quando saírem." />
         ) : (
           <ul className="flex flex-col divide-y divide-mid/15">
             {termos.map((termo) => (
@@ -54,7 +54,7 @@ export default function ExplicaPage() {
         <Card variant="insight">
           <Eyebrow>Não perca os próximos termos</Eyebrow>
           <h2 className="mt-2 font-display text-2xl text-ink">
-            Entra na lista de fundadoras
+            Entra na lista de fundadores
           </h2>
           <ListaFundadorasForm origem="explica" className="mt-5" />
         </Card>

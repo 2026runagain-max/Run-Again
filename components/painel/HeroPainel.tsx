@@ -14,8 +14,22 @@ function formatarData(iso: string) {
  * média nem valor em cache sem indicação de data (RF03-CA2). A adaptação é
  * aviso/gate: a "ação" orienta, a próxima sessão continua dependendo de
  * revisão do profissional (regra §6).
+ *
+ * `atendimentoIniciado` — feedback da Marina (teste real, 2026-09): sem
+ * resposta de 24h ainda, o texto vazio dizia pra ELA responder "como se
+ * sentiu na sessão" — mas ela nunca teve sessão prescrita, porque nenhum
+ * profissional tinha aberto o caso dela ainda. Invertido: a bola estava com
+ * a Equipe, não com ela. Agora o texto vazio se divide em dois: sem
+ * atendimento ainda, a bola está com a Equipe (aguardandoAvaliacaoHero); com
+ * atendimento mas sem resposta de 24h, aí sim a ação é dela (vazioHero).
  */
-export function HeroPainel({ resultado }: { resultado: ResultadoPainel<Resposta24h[]> }) {
+export function HeroPainel({
+  resultado,
+  atendimentoIniciado,
+}: {
+  resultado: ResultadoPainel<Resposta24h[]>;
+  atendimentoIniciado: boolean;
+}) {
   if (!resultado.ok) {
     return (
       <div className="rounded-2xl bg-ink px-6 py-8 sm:px-10 sm:py-10">
@@ -33,7 +47,9 @@ export function HeroPainel({ resultado }: { resultado: ResultadoPainel<Resposta2
     return (
       <div className="rounded-2xl bg-ink px-6 py-8 sm:px-10 sm:py-10">
         <Eyebrow dark>{eyebrowsPainel.hero}</Eyebrow>
-        <p className="mt-3 font-sans text-lg leading-relaxed text-white sm:text-xl">{estadosPainel.vazioHero}</p>
+        <p className="mt-3 font-sans text-lg leading-relaxed text-white sm:text-xl">
+          {atendimentoIniciado ? estadosPainel.vazioHero : estadosPainel.aguardandoAvaliacaoHero}
+        </p>
       </div>
     );
   }

@@ -23,7 +23,10 @@ export interface PilarProduto {
 export const pilaresProduto: PilarProduto[] = [
   {
     slug: "fisioterapia",
-    emoji: "🩹",
+    // Feedback da Marina (teste real, 2026-09): era 🩹 (band-aid) — comunica
+    // exatamente o mito que a marca existe pra quebrar (fisioterapia = só
+    // pra quem já se machucou). Trocado por um ícone de força/fortalecimento.
+    emoji: "💪",
     nome: "Fisioterapia",
     descricaoCurta:
       "Retorno ao esporte com evidência científica — não repouso genérico até 'melhorar'.",

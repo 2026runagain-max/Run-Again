@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
+import { CardapioEEquivalencias } from "./CardapioEEquivalencias";
 import { PedirRevisaoButton } from "./PedirRevisaoButton";
 import { origemOrientacaoLabel, tipoDiaLabel } from "@/lib/nutricao/labels";
 import { NUTRICIONISTA_RESPONSAVEL_NOME } from "@/lib/nutricao/motor";
@@ -78,6 +79,10 @@ export function OrientacaoView({ orientacao }: { orientacao: OrientacaoNutricion
           <p className="text-sm font-sans text-mid">{orientacao.macros.explicacao}</p>
         </Card>
       )}
+
+      {/* Item 15 (feedback da Marina): equivalências e cardápio básico —
+          só faz sentido existir quando já há um alvo de macros calculado. */}
+      {orientacao.macros && <CardapioEEquivalencias macros={orientacao.macros} />}
 
       {orientacao.timing && (
         <Card variant="pillar" className="flex flex-col gap-4">

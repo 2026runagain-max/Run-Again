@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { createClient } from "@/lib/supabase/server";
 import { getAvaliacaoAtual } from "@/lib/avaliacao/queries";
+import { getAtendimentoIniciadoResultado } from "@/lib/fisioterapia/queries";
 import { bandaRiscoLabel, diagnosticoCopy, estados } from "@/lib/avaliacao/copy";
 
 export const metadata: Metadata = { title: "Meu diagnóstico — Run Again" };
@@ -23,6 +24,11 @@ export default async function DiagnosticoPage() {
   if (!avaliacao?.concluida_em || !avaliacao.banda_risco) {
     redirect("/corredor/comecar");
   }
+
+  // QA (feedback da Marina, item 1) — fail-safe pro lado seguro em caso de
+  // erro de leitura, mesma direção usada no painel.
+  const atendimentoIniciadoResultado = await getAtendimentoIniciadoResultado(user.id);
+  const atendimentoIniciado = atendimentoIniciadoResultado.ok ? atendimentoIniciadoResultado.data : false;
 
   return (
     <div className="mx-auto flex w-full max-w-2xl flex-col gap-8 py-4">
@@ -50,8 +56,17 @@ export default async function DiagnosticoPage() {
           <p className="text-xs font-sans font-semibold uppercase tracking-wide text-silver">
             {diagnosticoCopy.bandaRiscoLabel}
           </p>
-          <p className="mt-2 font-display text-4xl leading-none text-fire">{bandaRiscoLabel[avaliacao.banda_risco]}</p>
-          <p className="mt-3 font-sans text-sm leading-relaxed text-silver">{avaliacao.banda_risco_frase}</p>
+          {atendimentoIniciado ? (
+            <>
+              <p className="mt-2 font-display text-4xl leading-none text-fire">{bandaRiscoLabel[avaliacao.banda_risco]}</p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-silver">{avaliacao.banda_risco_frase}</p>
+            </>
+          ) : (
+            <>
+              <p className="mt-2 font-display text-4xl leading-none text-fire">{diagnosticoCopy.bandaRiscoLabelEmAvaliacao}</p>
+              <p className="mt-3 font-sans text-sm leading-relaxed text-silver">{diagnosticoCopy.bandaRiscoFraseEmAvaliacao}</p>
+            </>
+          )}
         </div>
       </div>
 

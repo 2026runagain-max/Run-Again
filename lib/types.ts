@@ -18,4 +18,7 @@ export interface Sessao {
   nome: string;
   papel: Papel;
   persona: Persona | null;
+  // Item 14 (feedback da Marina) — foto de perfil, pra Avatar mostrar no
+  // header assim que houver uma; null até o corredor enviar a primeira.
+  fotoUrl: string | null;
 }

@@ -23,7 +23,7 @@ export function Header({ area, sessao }: HeaderProps) {
 
   // RF07-CA1 — enquanto o corredor não tem persona definida, toda rota de
   // /corredor/* redireciona pra /corredor/comecar (lib/supabase/middleware.ts),
-  // exceto Perfil. Mostrar Nutrição/Psicologia/Comunidade/Minha Recuperação/
+  // exceto Perfil. Mostrar Nutrição/Psicologia/Comunidade/Treinos Recomendados/
   // Início nesse estado é oferecer um link que não leva a lugar nenhum —
   // achado como "ponto sem saída" na varredura de QA do beta. Filtra pra
   // mostrar só o que de fato abre.
@@ -74,7 +74,7 @@ export function Header({ area, sessao }: HeaderProps) {
                 aria-haspopup="menu"
                 aria-expanded={avatarMenuAberto}
               >
-                <Avatar nome={sessao.nome} />
+                <Avatar nome={sessao.nome} fotoUrl={sessao.fotoUrl} />
               </button>
               {avatarMenuAberto && (
                 <div
@@ -102,18 +102,12 @@ export function Header({ area, sessao }: HeaderProps) {
               )}
             </div>
           ) : (
-            <>
-              <Button
-                href="/login"
-                variant="ghost"
-                className="border-ink text-ink hover:bg-ink/5"
-              >
-                Entrar
-              </Button>
-              <Button href="/cadastro" variant="primary">
-                Começar
-              </Button>
-            </>
+            // Item 17 (feedback da Marina): um único botão de entrada no
+            // header — "Começar" + "Entrar" duplicavam o mesmo destino
+            // (cadastro vive dentro do próprio /login agora, ver item 17).
+            <Button href="/login" variant="primary">
+              Entrar
+            </Button>
           )}
         </div>
 
@@ -202,18 +196,10 @@ export function Header({ area, sessao }: HeaderProps) {
                   </Button>
                 </form>
               ) : (
-                <>
-                  <Button href="/cadastro" variant="primary" className="w-full">
-                    Começar
-                  </Button>
-                  <Button
-                    href="/login"
-                    variant="ghost"
-                    className="w-full border-ink text-ink hover:bg-ink/5"
-                  >
-                    Entrar
-                  </Button>
-                </>
+                // Item 17 — mesmo botão único do header desktop.
+                <Button href="/login" variant="primary" className="w-full">
+                  Entrar
+                </Button>
               )}
             </div>
           </div>

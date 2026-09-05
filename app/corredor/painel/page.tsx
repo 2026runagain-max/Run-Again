@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { EmptyState } from "@/components/estados/EmptyState";
@@ -17,7 +18,7 @@ import { getSessao } from "@/lib/auth/session";
 import { createClient } from "@/lib/supabase/server";
 import { getAvaliacaoAtual } from "@/lib/avaliacao/queries";
 import { estados } from "@/lib/avaliacao/copy";
-import { getHistoricoAtendimentosCorredorResultado } from "@/lib/fisioterapia/queries";
+import { getAtendimentoIniciadoResultado, getHistoricoAtendimentosCorredorResultado } from "@/lib/fisioterapia/queries";
 import { getAderenciaResultado, getPerfilPainel, getRespostas24hResultado } from "@/lib/painel/queries";
 import { getResumoBemEstar } from "@/lib/psicologia/queries";
 import {
@@ -90,7 +91,7 @@ function PainelSemDiagnostico({ avaliacaoIniciada, userId }: { avaliacaoIniciada
       <Link href="/corredor/minha-recuperacao">
         <Card variant="pillar" className="flex flex-col gap-2 transition-shadow hover:shadow-md">
           <Badge>FISIOTERAPIA</Badge>
-          <h2 className="font-display text-2xl text-ink">Minha recuperação</h2>
+          <h2 className="font-display text-2xl text-ink">Treinos recomendados</h2>
           <p className="text-sm font-sans text-mid">Sua sessão prescrita e a evolução real do seu retorno, em número.</p>
         </Card>
       </Link>
@@ -125,14 +126,26 @@ async function PainelComDiagnostico({
     return <OnboardingPainel />;
   }
 
-  const [respostasResultado, aderenciaResultado, historicoResultado, resumoBemEstar, chavesJaCompartilhadas] =
-    await Promise.all([
-      getRespostas24hResultado(userId),
-      getAderenciaResultado(userId),
-      getHistoricoAtendimentosCorredorResultado(),
-      getResumoBemEstar(userId, avaliacao),
-      getChavesJaCompartilhadas(userId),
-    ]);
+  const [
+    respostasResultado,
+    aderenciaResultado,
+    historicoResultado,
+    resumoBemEstar,
+    chavesJaCompartilhadas,
+    atendimentoIniciadoResultado,
+  ] = await Promise.all([
+    getRespostas24hResultado(userId),
+    getAderenciaResultado(userId),
+    getHistoricoAtendimentosCorredorResultado(),
+    getResumoBemEstar(userId, avaliacao),
+    getChavesJaCompartilhadas(userId),
+    getAtendimentoIniciadoResultado(userId),
+  ]);
+
+  // Feedback da Marina — lado seguro em caso de erro de leitura: assume que
+  // a avaliação profissional ainda NÃO aconteceu (nunca o contrário), tanto
+  // pro card de risco quanto pro hero de status do dia.
+  const atendimentoIniciado = atendimentoIniciadoResultado.ok ? atendimentoIniciadoResultado.data : false;
 
   const respostas = respostasResultado.ok ? respostasResultado.data : [];
 
@@ -171,7 +184,12 @@ async function PainelComDiagnostico({
   // que vivem nesta página (o 4º, insight, mora em minha-recuperacao/
   // evolucao/page.tsx). aindaNaoCompartilhada devolve null tanto quando a
   // leitura não é elegível quanto quando ela já foi compartilhada.
-  const compartilharRisco = aindaNaoCompartilhada(elegibilidadeRisco(riscoResultado), chavesJaCompartilhadas, "risco");
+  // Sem atendimento iniciado, o card de risco não mostra banda nenhuma
+  // (CardRisco), então também não faz sentido oferecer "compartilhar" uma
+  // leitura que nem apareceu de verdade.
+  const compartilharRisco = atendimentoIniciado
+    ? aindaNaoCompartilhada(elegibilidadeRisco(riscoResultado), chavesJaCompartilhadas, "risco")
+    : null;
   const compartilharCargaForma = aindaNaoCompartilhada(
     elegibilidadeCargaForma(cargaFormaResultado),
     chavesJaCompartilhadas,
@@ -189,12 +207,12 @@ async function PainelComDiagnostico({
   // nunca disputa essa posição (regra §6.1: nunca vira cobrança visual).
   const parCargaRisco = riscoPrimeiroQueCargaForma(riscoResultado, cargaFormaResultado)
     ? [
-        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} />,
+        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} atendimentoIniciado={atendimentoIniciado} />,
         <CardCargaForma key="carga" resultado={cargaFormaResultado} compartilhar={compartilharCargaForma} />,
       ]
     : [
         <CardCargaForma key="carga" resultado={cargaFormaResultado} compartilhar={compartilharCargaForma} />,
-        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} />,
+        <CardRisco key="risco" resultado={riscoResultado} compartilhar={compartilharRisco} atendimentoIniciado={atendimentoIniciado} />,
       ];
   const cartaoAderencia = <CardAderencia key="aderencia" resultado={aderenciaResultado} compartilhar={compartilharAderencia} />;
   const cartaoBemEstar = (
@@ -211,7 +229,21 @@ async function PainelComDiagnostico({
 
   return (
     <div className="flex flex-col gap-6">
-      <HeroPainel resultado={respostasResultado} />
+      <HeroPainel resultado={respostasResultado} atendimentoIniciado={atendimentoIniciado} />
+
+      {/* QA (feedback da Marina): o caminho pra registrar refeição ficava
+          escondido dentro do hub de Nutrição (2 cliques + rolar até um link
+          de texto pequeno no fim da página). Atalho de destaque logo na
+          tela principal do painel, ao lado do atalho equivalente de treino
+          (que já existia, mas só dentro do card de aderência). */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <Button href="/corredor/minha-recuperacao/sessao" variant="primary" className="w-full">
+          Registrar treino
+        </Button>
+        <Button href="/corredor/nutricao/registro" variant="fire-ghost" className="w-full">
+          Registrar refeição
+        </Button>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{cardsOrdenados}</div>
 

@@ -6,6 +6,13 @@ import Link from "next/link";
 const linksInstitucionais = [
   { label: "Área de Membro", href: "/area-de-membro" },
   { label: "Ebook Corrida sem Lesão", href: "/ebook-corrida-sem-lesao" },
+  // Item 16 (feedback da Marina): Blog e Run Explica precisam ficar
+  // acessíveis pra quem já está logado, sem precisar deslogar — este
+  // Footer é o mesmo componente usado nas áreas de corredor e
+  // profissional (app/corredor/layout.tsx, app/profissional/layout.tsx),
+  // então incluir os dois aqui resolve sem tocar na navegação do header.
+  { label: "Blog", href: "/blog" },
+  { label: "Run Explica", href: "/explica" },
   { label: "Sobre", href: "/sobre" },
   { label: "Contato", href: "/contato" },
   { label: "Termos de Uso", href: "/termos" },
