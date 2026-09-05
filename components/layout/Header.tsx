@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
-import { navPorArea } from "@/lib/nav-config";
+import { navPorArea, ROTAS_CORREDOR_SEM_PERSONA } from "@/lib/nav-config";
 import { cn } from "@/lib/cn";
 import type { Sessao } from "@/lib/types";
 import { logoutAction } from "@/lib/auth/actions";
@@ -21,8 +21,17 @@ export function Header({ area, sessao }: HeaderProps) {
   const [menuAberto, setMenuAberto] = useState(false);
   const [avatarMenuAberto, setAvatarMenuAberto] = useState(false);
 
-  const itens = navPorArea(area);
-  const logoHref = sessao ? `/${sessao.papel}/painel` : "/";
+  // RF07-CA1 — enquanto o corredor não tem persona definida, toda rota de
+  // /corredor/* redireciona pra /corredor/comecar (lib/supabase/middleware.ts),
+  // exceto Perfil. Mostrar Nutrição/Psicologia/Comunidade/Minha Recuperação/
+  // Início nesse estado é oferecer um link que não leva a lugar nenhum —
+  // achado como "ponto sem saída" na varredura de QA do beta. Filtra pra
+  // mostrar só o que de fato abre.
+  const semPersonaAinda = area === "corredor" && sessao?.papel === "corredor" && sessao.persona === null;
+  const itens = semPersonaAinda
+    ? navPorArea(area).filter((item) => ROTAS_CORREDOR_SEM_PERSONA.some((r) => item.href.startsWith(r)))
+    : navPorArea(area);
+  const logoHref = sessao ? (semPersonaAinda ? "/corredor/comecar" : `/${sessao.papel}/painel`) : "/";
 
   return (
     <header className="sticky top-0 z-40 border-b border-mid/10 bg-paper text-ink">
@@ -170,7 +179,11 @@ export function Header({ area, sessao }: HeaderProps) {
                   </Link>
                 );
               })}
-              {sessao && (
+              {/* QA do beta: itens já inclui "Perfil" pra area corredor/profissional
+                  (navCorredor/navProfissional) — repetir aqui duplicava o item no
+                  menu mobile. Only navPublico não tem Perfil, e é o único caso em
+                  que faz sentido completar com este link solto. */}
+              {sessao && area === "publico" && (
                 <Link
                   href={`/${sessao.papel}/perfil`}
                   onClick={() => setMenuAberto(false)}

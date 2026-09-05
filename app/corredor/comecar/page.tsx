@@ -1,18 +1,37 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AvaliacaoWizard } from "@/components/avaliacao/AvaliacaoWizard";
+import { Card } from "@/components/ui/Card";
 import { createClient } from "@/lib/supabase/server";
 import { getAvaliacaoAtual, getPerfilAvaliacao, primeiroBlocoIncompleto } from "@/lib/avaliacao/queries";
 import { CHAVES_BLOCOS, type RespostasAvaliacao } from "@/lib/avaliacao/types";
 
 export const metadata: Metadata = { title: "Sua avaliação — Run Again" };
 
+// QA do beta — rótulo pro banner de "por que caí aqui" (ver comentário em
+// lib/supabase/middleware.ts). Prefixo, não igualdade exata: cobre
+// sub-rotas como /corredor/psicologia/check-in.
+const ROTULO_POR_PREFIXO: [string, string][] = [
+  ["/corredor/nutricao", "Nutrição"],
+  ["/corredor/psicologia", "Psicologia do Esporte"],
+  ["/corredor/comunidade", "Comunidade"],
+  ["/corredor/minha-recuperacao", "Minha Recuperação"],
+  ["/corredor/painel", "seu painel"],
+];
+
+function rotuloBloqueado(pathname: string | undefined): string | null {
+  if (!pathname) return null;
+  const encontrado = ROTULO_POR_PREFIXO.find(([prefixo]) => pathname.startsWith(prefixo));
+  return encontrado?.[1] ?? null;
+}
+
 export default async function ComecarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ modo?: string }>;
+  searchParams: Promise<{ modo?: string; bloqueado?: string }>;
 }) {
-  const { modo } = await searchParams;
+  const { modo, bloqueado } = await searchParams;
+  const rotuloDaRotaBloqueada = rotuloBloqueado(bloqueado);
 
   const supabase = await createClient();
   const {
@@ -51,6 +70,17 @@ export default async function ComecarPage({
 
   return (
     <div className="py-4">
+      {rotuloDaRotaBloqueada && (
+        <div className="mx-auto mb-6 max-w-2xl px-4 sm:px-6">
+          <Card variant="insight">
+            <p className="font-sans text-sm text-ink">
+              {rotuloDaRotaBloqueada === "seu painel"
+                ? "Seu painel abre assim que você termina esta avaliação — é o que constrói o retrato que ele mostra."
+                : `${rotuloDaRotaBloqueada} abre assim que você termina esta avaliação — é o que dá à Equipe Run Again o retrato pra te acompanhar aí.`}
+            </p>
+          </Card>
+        </div>
+      )}
       <AvaliacaoWizard passoInicial={passoInicial} personaAtual={perfil?.persona ?? null} respostas={respostas} />
     </div>
   );

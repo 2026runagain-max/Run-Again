@@ -389,6 +389,11 @@ export const diagnosticoCopy = {
   // Quando RF06 reativar, trocar por estados.sucessoCompartilhadoComEquipe.
   proximosPassosTexto:
     "Seu diagnóstico está salvo e pronto pra sua próxima conversa com a Equipe Run Again — você pode voltar aqui quando quiser rever.",
+  // QA do beta: antes desta correção, esta tela (o "AHA moment" logo após
+  // terminar a avaliação) não tinha nenhum CTA de avançar — só "editar",
+  // que reabre o wizard. Quem terminava aqui só continuava se reparasse no
+  // header. Painel é o próximo passo natural, não editar de novo.
+  irParaPainelCta: "Ver meu painel",
   editarCta: "Algo mudou? Atualizar minha avaliação",
 };
 

@@ -8,8 +8,12 @@ export const onboardingPainel = {
   eyebrow: "SEU PAINEL",
   titulo: "Aqui não é onde você mede se está fazendo o suficiente.",
   tituloDestaque: "É onde você vê o que já é verdade sobre o seu corpo.",
+  // QA do beta: esta frase ainda citava "medicina do esporte" como um dos
+  // cuidados que "vão aparecer aqui também" — pilar removido da estratégia
+  // de produto (decisão de produto, ver lib/types.ts). Corrigido pra
+  // nutrição e psicologia, que já são reais.
   corpo:
-    "Cada número aqui vem de algo que você já contou ou já fez — seu diagnóstico, suas sessões, suas respostas de como você se sentiu. Conforme você usa o protocolo, esta tela vai mostrando aderência, carga, risco e forma — sempre com o porquê ao lado, nunca só um número. E, aos poucos, os outros cuidados do Run Again — nutrição, medicina do esporte, psicologia — vão aparecer aqui também.",
+    "Cada número aqui vem de algo que você já contou ou já fez — seu diagnóstico, suas sessões, suas respostas de como você se sentiu. Conforme você usa o protocolo, esta tela vai mostrando aderência, carga, risco e forma — sempre com o porquê ao lado, nunca só um número. E, aos poucos, os outros cuidados do Run Again — nutrição, psicologia — vão aparecer aqui também.",
   cta: "Ver minha sessão de hoje",
 };
 
@@ -134,7 +138,13 @@ export const bemEstarCaptionAtualizado = "Atualiza a cada check-in de Psicologia
 // do PRD de Nutrição Esportiva e RF-7 do PRD de Psicologia do Esporte
 // substituem esses placeholders por cards reais assim que há dado; ver
 // components/painel/GradePilares.tsx.
-export const OUTROS_PILARES = [{ nome: "Preparo físico" }, { nome: "Medicina do esporte" }];
+//
+// QA do beta: "Medicina do esporte" também saiu — mas por decisão de
+// produto, não porque ganhou tela própria. Esse pilar foi removido da
+// estratégia (o Run Again não terá médico do esporte na equipe — ver
+// lib/types.ts) e nunca deveria ter aparecido aqui como algo "em
+// construção": prometia um card que nunca vai existir.
+export const OUTROS_PILARES = [{ nome: "Preparo físico" }];
 
 // Regra §6: placeholder nunca vazio sem explicação, nunca com data.
 //

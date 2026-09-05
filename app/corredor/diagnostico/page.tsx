@@ -88,9 +88,14 @@ export default async function DiagnosticoPage() {
 
       <p className="text-center text-xs font-sans text-mid">{diagnosticoCopy.avisoHipotese}</p>
 
-      <Button variant="ghost" href="/corredor/comecar?modo=editar" className="self-center border-ink text-ink hover:bg-ink/5">
-        {diagnosticoCopy.editarCta}
-      </Button>
+      <div className="flex flex-col items-center gap-3">
+        <Button variant="primary" href="/corredor/painel" className="w-full sm:w-auto">
+          {diagnosticoCopy.irParaPainelCta}
+        </Button>
+        <Button variant="ghost" href="/corredor/comecar?modo=editar" className="border-ink text-ink hover:bg-ink/5">
+          {diagnosticoCopy.editarCta}
+        </Button>
+      </div>
     </div>
   );
 }

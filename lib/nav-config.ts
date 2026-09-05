@@ -34,3 +34,11 @@ export function navPorArea(area: "publico" | "corredor" | "profissional"): NavIt
   if (area === "profissional") return navProfissional;
   return navPublico;
 }
+
+// RF07-CA1 (lib/supabase/middleware.ts) — enquanto o corredor não tem
+// persona definida, toda rota de /corredor/* redireciona pra
+// /corredor/comecar, exceto estas duas. Fonte única: o Header (QA do beta)
+// e o middleware precisavam da mesma lista pra não ficarem inconsistentes
+// — um nav que mostra um link que o middleware bloqueia é exatamente o
+// "ponto sem saída" que a Returnista não deveria encontrar.
+export const ROTAS_CORREDOR_SEM_PERSONA = ["/corredor/comecar", "/corredor/perfil"];

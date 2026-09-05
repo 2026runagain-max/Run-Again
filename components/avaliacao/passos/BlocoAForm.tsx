@@ -8,10 +8,21 @@ import { PassoChrome } from "@/components/avaliacao/PassoChrome";
 import { useBlocoForm } from "@/components/avaliacao/useBlocoForm";
 import { salvarBlocoAction } from "@/lib/avaliacao/actions";
 import { blocoACopy, estados } from "@/lib/avaliacao/copy";
+import { blocoACompleto } from "@/lib/avaliacao/diagnostico";
 import type { BlocoA } from "@/lib/avaliacao/types";
 
 const acao = salvarBlocoAction.bind(null, "blocoA");
 
+// QA do beta: antes desta correção, o botão "Continuar" só olhava
+// `houveLesao` — dava pra clicar em "Continuar" tendo respondido "Sim" e
+// nada mais, sem nenhum dos 4 campos condicionais (região, tratamento,
+// situação atual, tempo parado). O clique então falhava no servidor com
+// uma mensagem genérica ("Escolhe uma opção pra continuar.") que não dizia
+// qual das 4 perguntas estava faltando — achado como "ponto sem saída"
+// (BLOCKER: a Returnista pode ficar presa aqui sem entender por quê).
+// Agora o botão só habilita quando o mesmo critério do servidor
+// (blocoACompleto, reaproveitado de lib/avaliacao/diagnostico.ts) já está
+// satisfeito no client.
 export function BlocoAForm({
   valoresIniciais,
   onSalvo,
@@ -21,6 +32,18 @@ export function BlocoAForm({
 }) {
   const { state, formAction, pending, onSubmit } = useBlocoForm<BlocoA>(acao, onSalvo);
   const [houveLesao, setHouveLesao] = useState(valoresIniciais?.houveLesao ?? "");
+  const [regiaoLesao, setRegiaoLesao] = useState(valoresIniciais?.regiaoLesao ?? "");
+  const [tratamentoLesao, setTratamentoLesao] = useState(valoresIniciais?.tratamentoLesao ?? "");
+  const [situacaoAtualLesao, setSituacaoAtualLesao] = useState(valoresIniciais?.situacaoAtualLesao ?? "");
+  const [tempoParado, setTempoParado] = useState(valoresIniciais?.tempoParado ?? "");
+
+  const podeContinuar = blocoACompleto({
+    houveLesao: houveLesao as BlocoA["houveLesao"],
+    regiaoLesao: regiaoLesao as BlocoA["regiaoLesao"],
+    tratamentoLesao: tratamentoLesao as BlocoA["tratamentoLesao"],
+    situacaoAtualLesao: situacaoAtualLesao as BlocoA["situacaoAtualLesao"],
+    tempoParado: tempoParado as BlocoA["tempoParado"],
+  });
 
   return (
     <form action={formAction} onSubmit={onSubmit}>
@@ -34,7 +57,12 @@ export function BlocoAForm({
           <div className="flex flex-col gap-5 border-t border-mid/10 pt-5">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium font-sans text-ink">{blocoACopy.regiaoLesao.label}</label>
-              <OpcaoCards name="regiaoLesao" defaultValue={valoresIniciais?.regiaoLesao} opcoes={blocoACopy.regiaoLesao.opcoes} />
+              <OpcaoCards
+                name="regiaoLesao"
+                value={regiaoLesao}
+                onChange={setRegiaoLesao}
+                opcoes={blocoACopy.regiaoLesao.opcoes}
+              />
             </div>
 
             <Textarea
@@ -49,7 +77,8 @@ export function BlocoAForm({
               <label className="text-sm font-medium font-sans text-ink">{blocoACopy.tratamentoLesao.label}</label>
               <OpcaoCards
                 name="tratamentoLesao"
-                defaultValue={valoresIniciais?.tratamentoLesao}
+                value={tratamentoLesao}
+                onChange={setTratamentoLesao}
                 opcoes={blocoACopy.tratamentoLesao.opcoes}
               />
             </div>
@@ -58,14 +87,15 @@ export function BlocoAForm({
               <label className="text-sm font-medium font-sans text-ink">{blocoACopy.situacaoAtualLesao.label}</label>
               <OpcaoCards
                 name="situacaoAtualLesao"
-                defaultValue={valoresIniciais?.situacaoAtualLesao}
+                value={situacaoAtualLesao}
+                onChange={setSituacaoAtualLesao}
                 opcoes={blocoACopy.situacaoAtualLesao.opcoes}
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium font-sans text-ink">{blocoACopy.tempoParado.label}</label>
-              <OpcaoCards name="tempoParado" defaultValue={valoresIniciais?.tempoParado} opcoes={blocoACopy.tempoParado.opcoes} />
+              <OpcaoCards name="tempoParado" value={tempoParado} onChange={setTempoParado} opcoes={blocoACopy.tempoParado.opcoes} />
             </div>
           </div>
         )}
@@ -76,7 +106,7 @@ export function BlocoAForm({
           </p>
         )}
 
-        <Button type="submit" variant="primary" loading={pending} disabled={!houveLesao} className="self-start">
+        <Button type="submit" variant="primary" loading={pending} disabled={!podeContinuar} className="self-start">
           Continuar
         </Button>
       </PassoChrome>

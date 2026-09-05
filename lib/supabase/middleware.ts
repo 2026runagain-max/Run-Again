@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Papel } from "@/lib/types";
+import { ROTAS_CORREDOR_SEM_PERSONA } from "@/lib/nav-config";
 
 const AUTH_PAGES = ["/login", "/cadastro"];
 
@@ -8,7 +9,7 @@ const AUTH_PAGES = ["/login", "/cadastro"];
 // pilar redirecionam pro início da avaliação. Estas duas rotas são a
 // exceção: é pra elas que o redirecionamento aponta, e a conta ainda
 // precisa funcionar (perfil/logout) mesmo sem persona definida.
-const ROTAS_CORREDOR_SEM_PERSONA = ["/corredor/comecar", "/corredor/perfil"];
+// (Lista compartilhada com o Header — ver lib/nav-config.ts.)
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -67,9 +68,18 @@ export async function updateSession(request: NextRequest) {
   if (emAreaCorredor && user && papel === "corredor" && !ROTAS_CORREDOR_SEM_PERSONA.some((r) => pathname.startsWith(r))) {
     const { data: perfil } = await supabase.from("usuarios").select("persona").eq("id", user.id).single();
     if (!perfil?.persona) {
+      // QA do beta: antes desta linha, o redirecionamento era mudo — quem
+      // clicava em Nutrição/Psicologia/Comunidade/Minha Recuperação antes
+      // de terminar a avaliação caía de volta na mesma tela sem nenhuma
+      // explicação (achado como "ponto sem saída" na varredura de QA). O
+      // Header agora esconde esses links nesse estado (lib/nav-config.ts),
+      // mas isto cobre quem chega direto pela URL (aba salva, histórico,
+      // botão voltar) — pra esses casos, /corredor/comecar lê `bloqueado` e
+      // mostra por que a rota pedida não abriu ainda.
       const url = request.nextUrl.clone();
       url.pathname = "/corredor/comecar";
       url.search = "";
+      url.searchParams.set("bloqueado", pathname);
       return NextResponse.redirect(url);
     }
   }
