@@ -30,9 +30,9 @@ Contei as 24 tabelas em `public` criadas nas migrations e as 24 chamadas de `ena
 
 **Porém, encontrei um jeito real de contornar isso — CRÍTICO:** as funções que gravam nessas tabelas (`consumir_convite_beta`, `liberar_convite_beta`, `consumir_convite_profissional`) rodam com um privilégio especial do Postgres ("security definer") que ignora RLS. Isso é intencional — mas o Postgres libera essas funções pra **qualquer um chamar por padrão**, e ninguém tinha revogado esse acesso (ao contrário de 5 outras funções parecidas no projeto, que já tinham essa trava). Na prática, **qualquer pessoa na internet, usando só a chave pública do Supabase (a mesma que todo navegador já carrega), conseguia chamar a função de consumir código de convite direto contra o Supabase** — sem passar pelo site, sem nenhum limite de tentativas. Cada tentativa bem-sucedida consumia de verdade uma vaga de convite real. Escrevi uma primeira correção pra isso (`0012_endurecer_funcoes_convite.sql`).
 
-**Atualização, depois de você aplicar a 0012 — encontrei que minha primeira correção não funcionou de verdade, e escrevi uma segunda pra consertar isso.** Testei direto contra o banco real (chamando a função exatamente como um invasor chamaria, usando só a chave pública) depois de você ter aplicado a 0012, e a chamada continuou funcionando normalmente — a correção não bloqueou nada. Causa: neste projeto Supabase, o papel "anônimo" (quem não fez login) recebe permissão pra chamar toda função nova de um jeito que um `revoke ... from public` não desfaz — precisa revogar explicitamente do papel anônimo e do papel autenticado, não só de "public". Esse mesmo erro já existia nas outras 5 funções "já protegidas" do projeto antes desta auditoria (achei testando uma por uma) — nelas não tem risco prático hoje porque cada uma confere por dentro se quem está chamando é o dono do dado, e isso continua funcionando; mas nas 3 funções de convite não existe essa segunda checada, então a falha ficava sem nenhuma proteção de verdade. Corrigido nas 8 de uma vez em `0014_corrigir_revoke_funcoes_definer.sql`, com o jeito certo de revogar (do papel anônimo e do autenticado, não só de "public"). **Ainda não tive como confirmar que este SQL específico bloqueia de verdade** — só vou saber com certeza depois que você aplicar esta migration e eu testar de novo contra o banco real, do mesmo jeito que testei a 0012 (é assim que descobri que a primeira correção não tinha funcionado). Me avisa depois de aplicar que eu confirmo.
+**Atualização, depois de você aplicar a 0012 — encontrei que minha primeira correção não funcionou de verdade, e escrevi uma segunda pra consertar isso.** Testei direto contra o banco real (chamando a função exatamente como um invasor chamaria, usando só a chave pública) depois de você ter aplicado a 0012, e a chamada continuou funcionando normalmente — a correção não bloqueou nada. Causa: neste projeto Supabase, o papel "anônimo" (quem não fez login) recebe permissão pra chamar toda função nova de um jeito que um `revoke ... from public` não desfaz — precisa revogar explicitamente do papel anônimo e do papel autenticado, não só de "public". Esse mesmo erro já existia nas outras 5 funções "já protegidas" do projeto antes desta auditoria (achei testando uma por uma) — nelas não tem risco prático hoje porque cada uma confere por dentro se quem está chamando é o dono do dado, e isso continua funcionando; mas nas 3 funções de convite não existe essa segunda checada, então a falha ficava sem nenhuma proteção de verdade. Corrigido nas 8 de uma vez em `0014_corrigir_revoke_funcoes_definer.sql`, com o jeito certo de revogar (do papel anônimo e do autenticado, não só de "public"). **Confirmado, depois de você aplicar a 0014:** testei de novo contra o banco real, chamando as 8 funções pela chave pública sem nenhuma sessão — agora **todas** retornam `permission denied` (o erro genuíno do Postgres barrando a chamada, bem diferente do erro de antes). Testei também o outro lado, pra garantir que não quebrei nada: criei uma conta de teste, fiz login de verdade, e chamei duas dessas funções autenticado — continuam funcionando normalmente (chegam até a lógica interna da função, só não passam por faltar dado de teste real, o que é o esperado). Removi a conta de teste depois.
 
-**Classificação: CRÍTICO — corrigido no código, aguardando você aplicar mais uma migration (0014) pra valer de verdade.**
+**Classificação: CRÍTICO — corrigido e confirmado.**
 
 ### Nenhuma policy deixa um usuário ler/editar dado de outro — ✅ JÁ CORRETO
 Revisei as 63 policies do projeto. Todo `insert`/`update`/`delete` voltado ao corredor exige `usuario_id = auth.uid()` (ou equivalente) — testei isso especificamente com um script, e as únicas 3 policies de **leitura** sem essa trava são as do feed da Comunidade (posts/respostas/reações), que são uma lista compartilhada por desenho — qualquer corredor pode ver o post de outro, é a funcionalidade. Escrita nesses mesmos posts continua travada ao próprio autor.
@@ -43,7 +43,7 @@ Um ponto pra você saber, não um bug: **qualquer profissional pode ler o diagn�
 Não estava exatamente nas perguntas do item 2, mas apareceu junto: a tabela `lista_fundadoras` tinha uma policy `with check (true)` liberando **qualquer** insert vindo do navegador, sem nenhuma restrição. Isso por si só não é incomum pra formulário público — mas combinado com o item 4 (abaixo), decidi travar essa também, pelo mesmo motivo do convite de beta: sem essa trava, qualquer proteção que eu adicionasse no site (validação de e-mail, honeypot, limite de tentativas) seria só decoração, porque dava pra escrever direto no Supabase ignorando o site inteiro. Corrigido junto com o item 4.
 
 **Ação sua (leia com atenção — isso precisa acontecer antes das correções funcionarem):**
-**Atualizado:** você já aplicou `0006`, `0011`, `0012` e `0013` — testei direto contra o banco real e confirmei que `0006` (tabela existe), `0011` (colunas + bucket de foto existem) e `0013` (o insert direto não é mais aceito) funcionaram certinho. Só falta aplicar `0014_corrigir_revoke_funcoes_definer.sql` (a correção da correção, explicada acima) pra fechar de vez o buraco das funções de convite.
+**Atualizado — tudo aplicado e confirmado:** `0006`, `0011`, `0012`, `0013` e `0014` já foram todas aplicadas. Testei cada uma direto contra o banco real: `0006` (tabela existe), `0011` (colunas + bucket de foto existem), `0013` (insert direto não é mais aceito) e `0014` (as 8 funções agora barram chamada sem sessão, e continuam funcionando pra quem está logado de verdade). Nenhuma pendência de migration restante.
 
 ---
 
@@ -80,7 +80,7 @@ Toda mensagem de erro mostrada ao usuário (nas 3 rotas de API e em todas as Ser
 
 **Classificação: CRÍTICO — corrigido (formulário de e-mail e força bruta de convite).**
 
-**Ação sua:** já feita — 0006 e 0013 aplicadas e confirmadas (ver item 2). A pendência que resta (migration 0014) é sobre o convite de beta, não sobre este formulário.
+**Ação sua:** nenhuma — 0006 e 0013 já aplicadas e confirmadas (ver item 2).
 
 ---
 
@@ -151,7 +151,7 @@ Toda mensagem de erro mostrada ao usuário (nas 3 rotas de API e em todas as Ser
 
 ## Resumo — o que precisa da sua ação, fora do código
 
-1. ~~Aplicar as migrations `0006`, `0011`, `0012`, `0013`~~ — feito, confirmado por mim contra o banco real. **Falta aplicar mais uma: `0014_corrigir_revoke_funcoes_definer.sql`** — descobri, testando a 0012 já aplicada, que ela não tinha bloqueado nada de verdade (explicado no item 2 acima); a 0014 é a correção de verdade. Cole o conteúdo dela no SQL Editor do Supabase, igual fez com as outras.
+1. ~~Aplicar as migrations `0006`, `0011`, `0012`, `0013`, `0014`~~ — todas aplicadas e **confirmadas por mim contra o banco real** (inclusive testando de novo depois que a 0012 sozinha não tinha funcionado — a 0014 corrigiu de verdade). Nenhuma pendência de migration.
 2. **Depois de navegar pelo site em produção e confirmar que não aparece nenhum aviso de bloqueio no console do navegador**, trocar `Content-Security-Policy-Report-Only` por `Content-Security-Policy` em `next.config.ts` (ou me pedir pra fazer essa troca depois de você confirmar).
 3. **Ativar o Dependabot** nas configurações do repositório no GitHub (Settings → Code security and analysis).
 4. Nenhuma chave precisa ser trocada — não encontrei nenhum segredo exposto em lugar nenhum, nem no código atual, nem no histórico do git.
@@ -160,7 +160,7 @@ Toda mensagem de erro mostrada ao usuário (nas 3 rotas de API e em todas as Ser
 
 | Severidade | Item | Status |
 |---|---|---|
-| CRÍTICO | Funções de convite chamáveis direto pela chave pública (item 2) | 1ª correção (0012) aplicada mas não funcionou de verdade — 2ª correção (0014) escrita, ainda precisa ser aplicada e confirmada |
+| CRÍTICO | Funções de convite chamáveis direto pela chave pública (item 2) | Corrigido e confirmado — a 1ª tentativa (0012) não bloqueou nada de verdade, a 2ª (0014) foi testada contra o banco real e confirmada |
 | CRÍTICO | Formulário de e-mail gravava direto do navegador, sem validação/limite/honeypot reais (item 4) | Corrigido e confirmado — migration 0013 aplicada, testei e o insert direto já não é mais aceito |
 | CRÍTICO | Força bruta de código de convite de beta sem limite de tentativas (item 4) | Corrigido no código (não depende de migration) |
 | IMPORTANTE | Nenhum cabeçalho de segurança/CSP existia (item 5) | Corrigido — CSP em modo aviso, aguardando sua confirmação pra ativar de vez |
