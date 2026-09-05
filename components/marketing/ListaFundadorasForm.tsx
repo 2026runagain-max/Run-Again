@@ -4,7 +4,7 @@ import { useId, useState, type FormEvent } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { SuccessState } from "@/components/estados/SuccessState";
-import { createClient } from "@/lib/supabase/client";
+import { inscreverNaListaFundadorasAction } from "@/lib/leads/actions";
 import { listaFundadorasSchema } from "@/lib/leads/validation";
 
 type Campo = "nome" | "email";
@@ -50,6 +50,10 @@ export function ListaFundadorasForm({
       nome: String(formData.get("nome") ?? ""),
       email: String(formData.get("email") ?? ""),
     };
+    // Honeypot (auditoria de segurança pré-lançamento, item 4): campo
+    // invisível pra gente de verdade — só um bot que preenche todo input
+    // do formulário sem olhar chega a preencher este aqui.
+    const website = String(formData.get("website") ?? "");
 
     const parsed = listaFundadorasSchema.safeParse(valores);
     if (!parsed.success) {
@@ -66,18 +70,15 @@ export function ListaFundadorasForm({
     setCarregando(true);
 
     try {
-      const supabase = createClient();
-      const { error } = await supabase.from("lista_fundadoras").upsert(
-        {
-          nome: parsed.data.nome,
-          email: parsed.data.email.toLowerCase(),
-          origem,
-        },
-        { onConflict: "email", ignoreDuplicates: true },
-      );
+      const resultado = await inscreverNaListaFundadorasAction({
+        nome: parsed.data.nome,
+        email: parsed.data.email,
+        origem,
+        website,
+      });
 
-      if (error) {
-        setErroGeral("Isso não devia ter acontecido. Tenta de novo em alguns segundos.");
+      if (!resultado.ok) {
+        setErroGeral(resultado.erro);
         return;
       }
 
@@ -101,6 +102,21 @@ export function ListaFundadorasForm({
 
   return (
     <form onSubmit={handleSubmit} className={className} noValidate aria-describedby={`${formId}-microtexto`}>
+      {/* Honeypot (auditoria de segurança pré-lançamento, item 4): fora da
+          tela e fora da ordem de tab, nunca alcançável por quem usa teclado
+          ou leitor de tela — só bot que preenche todo campo sem olhar cai
+          aqui. `tabIndex={-1}` + `aria-hidden` garantem isso; `left-[-9999px]`
+          em vez de `display:none` porque alguns bots ignoram campo
+          invisível por CSS óbvio, mas isto não muda o comportamento pra
+          ninguém real. */}
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        aria-hidden="true"
+        autoComplete="off"
+        className="absolute left-[-9999px] h-0 w-0 opacity-0"
+      />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <Input
           name="nome"

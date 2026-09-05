@@ -2,13 +2,29 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { TERMOS_VERSAO_ATUAL } from "@/lib/legal";
+import { checarRateLimit, ipDaRequisicao } from "@/lib/security/rate-limit";
 
 const bodySchema = z.object({
   token: z.uuid(),
   senha: z.string().min(8, "A senha precisa ter pelo menos 8 caracteres."),
 });
 
+// Auditoria de segurança pré-lançamento (2026-09), item 4 — mesma defesa em
+// profundidade do cadastro de corredor. Risco bem menor aqui (o token é um
+// UUID aleatório, não adivinhável por força bruta na prática), mas o custo
+// de adicionar é baixo e mantém as duas rotas de "aceitar convite"
+// consistentes.
+const LIMITE_CONVITE = { limite: 8, janelaMs: 15 * 60 * 1000 };
+
 export async function POST(request: Request) {
+  const ip = ipDaRequisicao(request.headers);
+  if (!checarRateLimit(`convite-profissional:${ip}`, LIMITE_CONVITE)) {
+    return NextResponse.json(
+      { erro: "Muitas tentativas seguidas. Espera alguns minutos e tenta de novo." },
+      { status: 429 },
+    );
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = bodySchema.safeParse(body);
 

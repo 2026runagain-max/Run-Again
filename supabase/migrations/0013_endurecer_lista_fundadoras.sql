@@ -1,0 +1,21 @@
+-- Auditoria de segurança pré-lançamento (2026-09) — CRÍTICO (item 4).
+--
+-- "qualquer um pode se inscrever na lista de fundadoras" (0006) permitia
+-- insert direto pra anon/authenticated com "with check (true)" — sem
+-- nenhuma restrição de linha. Isso queria dizer que o formulário React
+-- (components/marketing/ListaFundadorasForm.tsx) nunca foi a única porta
+-- de entrada de verdade: qualquer requisição usando só a chave anônima
+-- pública do Supabase (a mesma que todo navegador já carrega, visível
+-- pra qualquer um que abra o DevTools) conseguia gravar direto nesta
+-- tabela via API REST do Supabase — sem passar pela validação de e-mail,
+-- pelo honeypot ou pelo limite de tentativas por IP que
+-- lib/leads/actions.ts agora aplica. Toda proteção adicionada só no
+-- componente React era, na prática, decoração de UX facilmente
+-- ignorável por quem soubesse chamar a API direto.
+--
+-- Fix: escrita passa a acontecer só via service role key (Server Action
+-- inscreverNaListaFundadorasAction, lib/leads/actions.ts) — mesmo padrão
+-- já usado em convites_beta/convites_profissional/audit_log neste mesmo
+-- projeto. Sem policy nova: RLS ligado + zero policy = ninguém lê/grava
+-- direto pelo client, só via service role.
+drop policy if exists "qualquer um pode se inscrever na lista de fundadoras" on public.lista_fundadoras;

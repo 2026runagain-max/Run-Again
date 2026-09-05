@@ -1,0 +1,37 @@
+-- Auditoria de segurança pré-lançamento (2026-09) — CRÍTICO.
+--
+-- consumir_convite_beta, liberar_convite_beta e consumir_convite_profissional
+-- (0001_fundacao.sql) são "security definer": rodam com o privilégio de quem
+-- criou a função, não do papel de quem chama — por isso conseguem
+-- atualizar convites_beta/convites_profissional mesmo essas tabelas não
+-- tendo NENHUMA policy pra client nenhum (por desenho, ver comentário na
+-- própria 0001). O problema: ao contrário de toda outra função security
+-- definer deste projeto (marcar_exercicio_concluido, corredor_tem_caso_aberto,
+-- marcar_checkins_psicologia_revisados, excluir_post_comunidade,
+-- excluir_resposta_comunidade — todas com "revoke all ... from public" logo
+-- após serem criadas), estas 3 nunca receberam esse revoke. Postgres libera
+-- EXECUTE pra PUBLIC por padrão em toda função nova — o que inclui os
+-- papéis anon e authenticated do Supabase.
+--
+-- Na prática: qualquer pessoa na internet, usando só a chave anônima
+-- pública (a mesma que todo navegador já carrega), conseguia chamar
+-- supabase.rpc('consumir_convite_beta', { p_codigo: '<qualquer coisa>' })
+-- direto contra o Supabase — sem passar pela rota /api/cadastro-corredor,
+-- sem qualquer limite de tentativas. Cada chamada bem-sucedida consome de
+-- verdade uma vaga de um código de convite real (usos_atuais soma 1),
+-- então isso também permitia esgotar convites de beta de gente de
+-- verdade só testando strings ao acaso. consumir_convite_profissional usa
+-- token UUID (não é adivinhável na prática), mas o mesmo princípio de
+-- defesa em profundidade vale: só a rota de servidor (sempre com a
+-- service role key, que ignora GRANT/REVOKE) deveria poder chamar isto.
+--
+-- Fix: mesmo padrão já usado nas outras 5 funções do projeto — revoga de
+-- PUBLIC (contempla anon e authenticated) e não concede a ninguém, porque
+-- nenhum client legítimo chama estas 3 diretamente (só
+-- app/api/cadastro-corredor/route.ts e
+-- app/api/aceitar-convite-profissional/route.ts, os dois via
+-- createAdminClient()/service role, que ignora estes GRANTs de qualquer
+-- forma).
+revoke all on function public.consumir_convite_beta(text) from public;
+revoke all on function public.liberar_convite_beta(text) from public;
+revoke all on function public.consumir_convite_profissional(uuid) from public;

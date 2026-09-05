@@ -3,8 +3,25 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { cadastroCorredorSchema } from "@/lib/validation/auth";
 import { TERMOS_VERSAO_ATUAL, TRIAL_DIAS } from "@/lib/legal";
 import { mensagemDeErroAuth } from "@/lib/auth/erros";
+import { checarRateLimit, ipDaRequisicao } from "@/lib/security/rate-limit";
+
+// Auditoria de segurança pré-lançamento (2026-09), item 4: sem isto,
+// codigoConvite era validado no servidor (bom — nunca só no navegador),
+// mas nada impedia um script tentar centenas de códigos em sequência
+// contra esta rota, adivinhando por força bruta. 8 tentativas a cada 15
+// min por IP — dá folga de sobra pra alguém errando de dedo o próprio
+// código, mas trava um script tentando muitos de uma vez.
+const LIMITE_CADASTRO = { limite: 8, janelaMs: 15 * 60 * 1000 };
 
 export async function POST(request: Request) {
+  const ip = ipDaRequisicao(request.headers);
+  if (!checarRateLimit(`cadastro:${ip}`, LIMITE_CADASTRO)) {
+    return NextResponse.json(
+      { erro: "Muitas tentativas seguidas. Espera alguns minutos e tenta de novo." },
+      { status: 429 },
+    );
+  }
+
   const body = await request.json().catch(() => null);
   const parsed = cadastroCorredorSchema.safeParse(body);
 

@@ -1,0 +1,19 @@
+# Auditoria de segurança pré-lançamento (2026-09), item 7.
+#
+# Alerta automático de vulnerabilidade nova em dependência, depois do
+# lançamento — sem isso, o projeto só descobre uma falha de segurança numa
+# lib de terceiro se alguém rodar "npm audit" manualmente de novo.
+#
+# Este arquivo sozinho NÃO liga o Dependabot: também precisa ser
+# confirmado/ativado nas configurações do repositório no GitHub (Settings →
+# Code security → Dependabot) — ver auditoria-de-seguranca.md pro passo a
+# passo, isso não dá pra fazer só editando código.
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
