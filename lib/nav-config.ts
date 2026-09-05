@@ -6,12 +6,17 @@ export interface NavItem {
 export const navCorredor: NavItem[] = [
   { label: "Início", href: "/corredor/painel" },
   { label: "Minha Recuperação", href: "/corredor/minha-recuperacao" },
+  { label: "Nutrição", href: "/corredor/nutricao" },
+  { label: "Psicologia", href: "/corredor/psicologia/check-in" },
+  { label: "Comunidade", href: "/corredor/comunidade" },
   { label: "Perfil", href: "/corredor/perfil" },
 ];
 
 export const navProfissional: NavItem[] = [
   { label: "Início", href: "/profissional/painel" },
   { label: "Pacientes", href: "/profissional/pacientes" },
+  { label: "Nutrição", href: "/profissional/nutricao/casos" },
+  { label: "Psicologia", href: "/profissional/psicologia/fila" },
   { label: "Perfil", href: "/profissional/perfil" },
 ];
 
@@ -29,3 +34,11 @@ export function navPorArea(area: "publico" | "corredor" | "profissional"): NavIt
   if (area === "profissional") return navProfissional;
   return navPublico;
 }
+
+// RF07-CA1 (lib/supabase/middleware.ts) — enquanto o corredor não tem
+// persona definida, toda rota de /corredor/* redireciona pra
+// /corredor/comecar, exceto estas duas. Fonte única: o Header (QA do beta)
+// e o middleware precisavam da mesma lista pra não ficarem inconsistentes
+// — um nav que mostra um link que o middleware bloqueia é exatamente o
+// "ponto sem saída" que a Returnista não deveria encontrar.
+export const ROTAS_CORREDOR_SEM_PERSONA = ["/corredor/comecar", "/corredor/perfil"];

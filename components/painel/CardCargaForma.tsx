@@ -1,16 +1,27 @@
 import { Card } from "@/components/ui/Card";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { EstadoCardPainel } from "./EstadoCardPainel";
+import { RodapeAcoesCartao } from "./RodapeAcoesCartao";
+import { CompartilharEvidenciaButton } from "@/components/comunidade/CompartilharEvidenciaButton";
 import { bandaCargaFormaFrase, bandaCargaFormaLabel, estadosPainel, eyebrowsPainel } from "@/lib/painel/copy";
 import { cargaVidaLabel } from "@/lib/fisioterapia/labels";
 import type { CargaFormaResumo, ResultadoPainel } from "@/lib/painel/types";
+import type { ElegibilidadeCompartilhar } from "@/lib/comunidade/types";
 
 /**
  * RF05 — carga de vida entra combinada aqui, nunca isolada num card próprio
  * (regra §6.5). Sempre banda + frase, nunca gráfico de série temporal
  * nesta versão (RF05-CA2, item 16 LATER).
+ *
+ * `compartilhar` — RF01 da Comunidade (ver nota em CardRisco.tsx).
  */
-export function CardCargaForma({ resultado }: { resultado: ResultadoPainel<CargaFormaResumo | null> }) {
+export function CardCargaForma({
+  resultado,
+  compartilhar,
+}: {
+  resultado: ResultadoPainel<CargaFormaResumo | null>;
+  compartilhar?: ElegibilidadeCompartilhar | null;
+}) {
   return (
     <Card variant="pillar" className="flex flex-col gap-3">
       <Eyebrow>{eyebrowsPainel.cargaForma}</Eyebrow>
@@ -30,6 +41,16 @@ export function CardCargaForma({ resultado }: { resultado: ResultadoPainel<Carga
             </p>
           )}
         </>
+      )}
+
+      {compartilhar && (
+        <RodapeAcoesCartao>
+          <CompartilharEvidenciaButton
+            tipoEvidencia="carga_forma"
+            chave={compartilhar.chave}
+            textoEvidencia={compartilhar.textoEvidencia}
+          />
+        </RodapeAcoesCartao>
       )}
     </Card>
   );

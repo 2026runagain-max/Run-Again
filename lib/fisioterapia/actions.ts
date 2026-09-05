@@ -35,6 +35,7 @@ export async function iniciarAtendimentoAction(
       .from("atendimentos")
       .select("id")
       .eq("paciente_id", pacienteId)
+      .eq("especialidade", "fisioterapia")
       .eq("status", "em_andamento")
       .maybeSingle();
 
@@ -44,7 +45,7 @@ export async function iniciarAtendimentoAction(
 
     const { data, error } = await supabase
       .from("atendimentos")
-      .insert({ paciente_id: pacienteId, profissional_id: userId })
+      .insert({ paciente_id: pacienteId, profissional_id: userId, especialidade: "fisioterapia" })
       .select("id")
       .single();
 
@@ -106,6 +107,7 @@ export async function finalizarAtendimentoAction(
       .from("atendimentos")
       .update({ status: "finalizado", finalizado_em: new Date().toISOString() })
       .eq("id", atendimentoId)
+      .eq("especialidade", "fisioterapia")
       .eq("status", "em_andamento");
 
     if (error) return { ok: false, erro: ERRO_GENERICO };
