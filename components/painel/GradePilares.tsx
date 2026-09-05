@@ -42,7 +42,7 @@ export async function GradePilares({ userId }: { userId: string }) {
       <Link href="/corredor/minha-recuperacao" className="mt-3 block">
         <Card variant="pillar" className="flex flex-col gap-2 transition-shadow hover:shadow-md">
           <Badge>ATIVO</Badge>
-          <h3 className="font-display text-2xl text-ink">Fisioterapia</h3>
+          <h3 className="font-display text-2xl text-ink">Treino</h3>
           <p className="text-sm font-sans text-mid">Seu protocolo, sessão de hoje e evolução.</p>
         </Card>
       </Link>

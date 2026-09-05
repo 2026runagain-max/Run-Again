@@ -90,7 +90,7 @@ function PainelSemDiagnostico({ avaliacaoIniciada, userId }: { avaliacaoIniciada
 
       <Link href="/corredor/minha-recuperacao">
         <Card variant="pillar" className="flex flex-col gap-2 transition-shadow hover:shadow-md">
-          <Badge>FISIOTERAPIA</Badge>
+          <Badge>TREINO</Badge>
           <h2 className="font-display text-2xl text-ink">Treinos recomendados</h2>
           <p className="text-sm font-sans text-mid">Sua sessão prescrita e a evolução real do seu retorno, em número.</p>
         </Card>

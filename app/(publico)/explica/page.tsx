@@ -9,7 +9,7 @@ import { getTermos } from "@/lib/explica/content";
 export const metadata: Metadata = {
   title: "Run Explica — Run Again",
   description:
-    "Glossário de termos de fisioterapia, preparo físico, nutrição esportiva e psicologia do esporte, explicados em linguagem direta para o corredor amador.",
+    "Glossário de termos de treino, nutrição esportiva e psicologia do esporte, explicados em linguagem direta para o corredor amador.",
 };
 
 export default function ExplicaPage() {

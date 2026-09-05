@@ -10,7 +10,7 @@ import { getDestaques } from "@/lib/blog/content";
 export const metadata: Metadata = {
   title: "Blog — Run Again",
   description:
-    "Artigos e guias sobre retorno ao esporte, fisioterapia, preparo físico, nutrição esportiva e psicologia do esporte para o corredor amador.",
+    "Artigos e guias sobre retorno ao esporte, treino, preparo físico, nutrição esportiva e psicologia do esporte para o corredor amador.",
 };
 
 export default function BlogPage() {
@@ -25,7 +25,7 @@ export default function BlogPage() {
             Conteúdo pra quem está voltando a correr.
           </h1>
           <p className="mx-auto mt-5 max-w-xl font-sans text-base leading-relaxed text-silver">
-            Fisioterapia, preparo físico, nutrição esportiva, medicina e psicologia do
+            Treino, preparo físico, nutrição esportiva e psicologia do
             esporte — explicados com evidência científica, sem urgência fabricada.
           </p>
         </div>

@@ -164,7 +164,18 @@ export const bemEstarCaptionAtualizado = "Atualiza a cada check-in de Psicologia
 // estratégia (o Run Again não terá médico do esporte na equipe — ver
 // lib/types.ts) e nunca deveria ter aparecido aqui como algo "em
 // construção": prometia um card que nunca vai existir.
-export const OUTROS_PILARES = [{ nome: "Preparo físico" }];
+//
+// "Preparo físico" também saiu — decisão de linguagem (terminologia e
+// reconciliação da lista de fundadores): Preparo Físico e Fisioterapia
+// (agora "Treino" no card ativo acima) são a mesma entrega pro corredor,
+// não dois pilares separados. Mostrar "Preparo físico · Em construção" ao
+// lado do card já ativo de Treino contradizia isso na cara do corredor —
+// mesmo problema de fundo do "Medicina do esporte" acima, só que a
+// entrega em si já existe, só o nome duplicava. O cadastro de
+// especialidade profissional (educacao_fisica) continua existindo no
+// banco — só a lista pública desta tela que não repete a mesma entrega
+// duas vezes.
+export const OUTROS_PILARES: { nome: string }[] = [];
 
 // Regra §6: placeholder nunca vazio sem explicação, nunca com data.
 //

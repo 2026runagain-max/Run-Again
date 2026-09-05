@@ -6,7 +6,7 @@ import { pilaresProduto } from "@/lib/site/pilares-produto";
 export const metadata: Metadata = {
   title: "Método — Run Again",
   description:
-    "Os 5 pilares do ecossistema Run Again explicados em profundidade: fisioterapia, preparação física, nutrição esportiva, psicologia do esporte e comunidade.",
+    "Os 5 pilares do ecossistema Run Again explicados em profundidade: treino, preparação física, nutrição esportiva, psicologia do esporte e comunidade.",
 };
 
 export default function MetodoPage() {
@@ -19,7 +19,7 @@ export default function MetodoPage() {
             Cinco pilares, um só protocolo.
           </h1>
           <p className="mx-auto mt-5 max-w-xl font-sans text-base leading-relaxed text-silver">
-            Nenhum concorrente integra fisioterapia, preparação física, nutrição e
+            Nenhum concorrente integra treino, preparação física, nutrição e
             psicologia do esporte numa jornada só. Cada pilar abaixo existe
             porque, sozinho, nenhum dos outros quatro evita lesão nem sustenta evolução.
           </p>

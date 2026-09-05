@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   // aqui pra não duplicar esse sufixo.
   title: "Run Again — Beta",
   description:
-    "Protocolo de retorno ao esporte para corredores lesionados. Fisioterapia, preparo físico e ecossistema clínico em um só lugar.",
+    "Protocolo de retorno ao esporte para corredores lesionados. Treino, preparo físico e ecossistema clínico em um só lugar.",
 };
 
 export default function RootLayout({
