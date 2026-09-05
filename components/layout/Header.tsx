@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Avatar } from "@/components/ui/Avatar";
+import { MateriaisDropdown } from "./MateriaisDropdown";
+import { materiais } from "@/lib/site/materiais";
 import { navPorArea, ROTAS_CORREDOR_SEM_PERSONA } from "@/lib/nav-config";
 import { cn } from "@/lib/cn";
 import type { Sessao } from "@/lib/types";
@@ -62,6 +64,10 @@ export function Header({ area, sessao }: HeaderProps) {
               </Link>
             );
           })}
+          {/* Loja de infoprodutos (Hotmart) — visível deslogado ou logado,
+              em qualquer área. Posição provisória: o desenho final do menu
+              é tarefa separada, já aprovada, ainda por vir. */}
+          <MateriaisDropdown />
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
@@ -173,6 +179,25 @@ export function Header({ area, sessao }: HeaderProps) {
                   </Link>
                 );
               })}
+              {/* Loja de infoprodutos no menu mobile — lista achatada em vez
+                  de dropdown (o hover do desktop não existe aqui, e um menu
+                  suspenso dentro do painel deslizante arrisca cortar o
+                  overflow). Mesma posição provisória do item de desktop. */}
+              <div className="border-t border-mid/10 pt-4">
+                <p className="text-xs font-bold font-sans uppercase tracking-wide text-mid">Run Again Materiais</p>
+                <div className="mt-3 flex flex-col gap-3">
+                  {materiais.map((material) => (
+                    <Link
+                      key={material.slug}
+                      href={material.href}
+                      onClick={() => setMenuAberto(false)}
+                      className="text-base font-semibold font-sans text-ink"
+                    >
+                      {material.nome}
+                    </Link>
+                  ))}
+                </div>
+              </div>
               {/* QA do beta: itens já inclui "Perfil" pra area corredor/profissional
                   (navCorredor/navProfissional) — repetir aqui duplicava o item no
                   menu mobile. Only navPublico não tem Perfil, e é o único caso em
