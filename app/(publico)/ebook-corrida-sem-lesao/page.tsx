@@ -19,7 +19,7 @@ const topicos = [
   "Por que 'descanso total' costuma ser o conselho errado — e o que fazer no lugar dele.",
   "Os sinais de alerta que dizem quando parar de verdade, em vez de adivinhar.",
   "Como retomar a corrida em progressão real, sem repetir o erro que te machucou da primeira vez.",
-  "Onde a fisioterapia termina e o preparo físico começa — e por que os dois precisam se conversar.",
+  "Por que treino e preparo físico não são fases separadas da sua volta — e como os dois andam juntos desde o primeiro dia.",
 ];
 
 const faq = [

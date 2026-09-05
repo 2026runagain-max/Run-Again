@@ -25,8 +25,14 @@ export interface ListaFundadorasFormProps {
  */
 export function ListaFundadorasForm({
   origem,
-  ctaLabel = "Quero garantir minha vaga de fundador",
-  microtexto = "Grátis. Sem cartão. Você só perde a vaga se não entrar agora.",
+  // Terminologia e reconciliação da lista de fundadores (decisão de
+  // produto, 2026-09): esta lista serve exclusivamente pra receber
+  // novidades e conteúdo por e-mail — quem entra aqui não ganha vaga, fila
+  // ou acesso antecipado ao beta automaticamente. Só quem compra um
+  // infoproduto tem o caminho direto de convite pro beta (decisão
+  // separada, sem fluxo automático desta lista pra lá).
+  ctaLabel = "Quero receber novidades do Run Again",
+  microtexto = "Grátis. Sem cartão. Só pra receber novidades e conteúdo do Run Again por e-mail.",
   className,
 }: ListaFundadorasFormProps) {
   const formId = useId();
@@ -87,7 +93,7 @@ export function ListaFundadorasForm({
     return (
       <SuccessState
         titulo="Feito."
-        subtitulo="Você já está na lista de fundadores. O ebook Corrida sem Lesão chega no seu e-mail, e você é a primeira a saber quando as vagas de acesso antecipado abrirem."
+        subtitulo="Você já está na lista de fundadores. O ebook Corrida sem Lesão chega no seu e-mail, e você passa a receber novidades e conteúdo do Run Again por lá."
         className={className}
       />
     );

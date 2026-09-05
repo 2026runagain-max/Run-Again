@@ -13,7 +13,7 @@ export default function PrivacidadePage() {
         <p>
           Tratamos seu nome e e-mail com base no seu consentimento explícito, dado no
           momento do cadastro. Nenhum dado de saúde é coletado neste fluxo — isso
-          passa a valer a partir dos fluxos de fisioterapia, nutrição e demais pilares
+          passa a valer a partir dos fluxos de treino, nutrição e demais pilares
           clínicos, cada um com seu próprio consentimento específico.
         </p>
         <p>

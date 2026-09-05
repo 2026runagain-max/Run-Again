@@ -14,8 +14,11 @@ export interface PilarBlog {
 
 export const pilaresBlog: PilarBlog[] = [
   {
+    // Terminologia (decisão de produto, 2026-09): "fisioterapia" continua
+    // só no slug (URL não muda) — o nome exibido ao corredor virou "Treino",
+    // mesma decisão aplicada ao pilar equivalente em pilares-produto.ts.
     slug: "fisioterapia-e-retorno-ao-esporte",
-    nome: "Fisioterapia e Retorno ao Esporte",
+    nome: "Treino e Retorno ao Esporte",
     descricao: "Lesão, retorno gradual, sinais de alerta e os mitos do 'descanso total'.",
   },
   {
