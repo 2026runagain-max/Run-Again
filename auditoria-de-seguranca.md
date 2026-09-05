@@ -28,9 +28,11 @@ Contei as 24 tabelas em `public` criadas nas migrations e as 24 chamadas de `ena
 ### Toda tabela com RLS tem pelo menos uma policy (ou é deliberadamente só-servidor) — ✅ JÁ CORRETO, com uma ressalva corrigida
 3 tabelas têm RLS ligado sem nenhuma policy pro navegador: `audit_log`, `convites_beta` e `convites_profissional`. Isso **não é o bug que a tarefa descreve** ("RLS ligado sem policy quebra a função") — é uma decisão deliberada e documentada no próprio código: essas 3 tabelas só são escritas pela service role key (que ignora RLS), nunca pelo navegador. Confirmei rastreando cada escrita nessas tabelas no código — todas passam por `createAdminClient()`.
 
-**Porém, encontrei um jeito real de contornar isso — CRÍTICO, corrigido:** as funções que gravam nessas tabelas (`consumir_convite_beta`, `liberar_convite_beta`, `consumir_convite_profissional`) rodam com um privilégio especial do Postgres ("security definer") que ignora RLS. Isso é intencional — mas o Postgres libera essas funções pra **qualquer um chamar por padrão**, e ninguém tinha revogado esse acesso (ao contrário de 5 outras funções parecidas no projeto, que já tinham essa trava). Na prática, **qualquer pessoa na internet, usando só a chave pública do Supabase (a mesma que todo navegador já carrega), conseguia chamar a função de consumir código de convite direto contra o Supabase** — sem passar pelo site, sem nenhum limite de tentativas. Cada tentativa bem-sucedida consumia de verdade uma vaga de convite real. Corrigi revogando esse acesso (migration nova `0012_endurecer_funcoes_convite.sql`) — agora só a service role key consegue chamar essas 3 funções, exatamente como já acontecia com as outras 5.
+**Porém, encontrei um jeito real de contornar isso — CRÍTICO:** as funções que gravam nessas tabelas (`consumir_convite_beta`, `liberar_convite_beta`, `consumir_convite_profissional`) rodam com um privilégio especial do Postgres ("security definer") que ignora RLS. Isso é intencional — mas o Postgres libera essas funções pra **qualquer um chamar por padrão**, e ninguém tinha revogado esse acesso (ao contrário de 5 outras funções parecidas no projeto, que já tinham essa trava). Na prática, **qualquer pessoa na internet, usando só a chave pública do Supabase (a mesma que todo navegador já carrega), conseguia chamar a função de consumir código de convite direto contra o Supabase** — sem passar pelo site, sem nenhum limite de tentativas. Cada tentativa bem-sucedida consumia de verdade uma vaga de convite real. Escrevi uma primeira correção pra isso (`0012_endurecer_funcoes_convite.sql`).
 
-**Classificação: CRÍTICO — corrigido no código.**
+**Atualização, depois de você aplicar a 0012 — encontrei que minha primeira correção não funcionou de verdade, e escrevi uma segunda pra consertar isso.** Testei direto contra o banco real (chamando a função exatamente como um invasor chamaria, usando só a chave pública) depois de você ter aplicado a 0012, e a chamada continuou funcionando normalmente — a correção não bloqueou nada. Causa: neste projeto Supabase, o papel "anônimo" (quem não fez login) recebe permissão pra chamar toda função nova de um jeito que um `revoke ... from public` não desfaz — precisa revogar explicitamente do papel anônimo e do papel autenticado, não só de "public". Esse mesmo erro já existia nas outras 5 funções "já protegidas" do projeto antes desta auditoria (achei testando uma por uma) — nelas não tem risco prático hoje porque cada uma confere por dentro se quem está chamando é o dono do dado, e isso continua funcionando; mas nas 3 funções de convite não existe essa segunda checada, então a falha ficava sem nenhuma proteção de verdade. Corrigido nas 8 de uma vez em `0014_corrigir_revoke_funcoes_definer.sql`, com o jeito certo de revogar (do papel anônimo e do autenticado, não só de "public"). **Ainda não tive como confirmar que este SQL específico bloqueia de verdade** — só vou saber com certeza depois que você aplicar esta migration e eu testar de novo contra o banco real, do mesmo jeito que testei a 0012 (é assim que descobri que a primeira correção não tinha funcionado). Me avisa depois de aplicar que eu confirmo.
+
+**Classificação: CRÍTICO — corrigido no código, aguardando você aplicar mais uma migration (0014) pra valer de verdade.**
 
 ### Nenhuma policy deixa um usuário ler/editar dado de outro — ✅ JÁ CORRETO
 Revisei as 63 policies do projeto. Todo `insert`/`update`/`delete` voltado ao corredor exige `usuario_id = auth.uid()` (ou equivalente) — testei isso especificamente com um script, e as únicas 3 policies de **leitura** sem essa trava são as do feed da Comunidade (posts/respostas/reações), que são uma lista compartilhada por desenho — qualquer corredor pode ver o post de outro, é a funcionalidade. Escrita nesses mesmos posts continua travada ao próprio autor.
@@ -41,7 +43,7 @@ Um ponto pra você saber, não um bug: **qualquer profissional pode ler o diagn�
 Não estava exatamente nas perguntas do item 2, mas apareceu junto: a tabela `lista_fundadoras` tinha uma policy `with check (true)` liberando **qualquer** insert vindo do navegador, sem nenhuma restrição. Isso por si só não é incomum pra formulário público — mas combinado com o item 4 (abaixo), decidi travar essa também, pelo mesmo motivo do convite de beta: sem essa trava, qualquer proteção que eu adicionasse no site (validação de e-mail, honeypot, limite de tentativas) seria só decoração, porque dava pra escrever direto no Supabase ignorando o site inteiro. Corrigido junto com o item 4.
 
 **Ação sua (leia com atenção — isso precisa acontecer antes das correções funcionarem):**
-As migrations `0012_endurecer_funcoes_convite.sql` e `0013_endurecer_lista_fundadoras.sql` (mais a `0011_perfil_corredor.sql`, de uma tarefa anterior, que ainda está pendente) **precisam ser aplicadas no painel do Supabase** — eu não tenho acesso pra rodar isso daqui. Além disso, descobri auditando que **a migration `0006_lista_fundadoras.sql` nunca foi aplicada no projeto de desenvolvimento** (a tabela `lista_fundadoras` não existe ainda no banco) — sem isso, o formulário de e-mail não funciona, com ou sem a minha correção de segurança. Resumo do que aplicar, em ordem: `0006`, `0011`, `0012`, `0013` (as SQL destas 4 migrations estão em `supabase/migrations/`, prontas pra colar no SQL Editor do Supabase, uma de cada vez, na ordem numérica).
+**Atualizado:** você já aplicou `0006`, `0011`, `0012` e `0013` — testei direto contra o banco real e confirmei que `0006` (tabela existe), `0011` (colunas + bucket de foto existem) e `0013` (o insert direto não é mais aceito) funcionaram certinho. Só falta aplicar `0014_corrigir_revoke_funcoes_definer.sql` (a correção da correção, explicada acima) pra fechar de vez o buraco das funções de convite.
 
 ---
 
@@ -78,7 +80,7 @@ Toda mensagem de erro mostrada ao usuário (nas 3 rotas de API e em todas as Ser
 
 **Classificação: CRÍTICO — corrigido (formulário de e-mail e força bruta de convite).**
 
-**Ação sua:** as migrations 0006/0013 precisam ser aplicadas (ver item 2) — sem isso o formulário de e-mail continua fora do ar (não por causa da minha correção, é uma migration antiga pendente que já estava assim antes).
+**Ação sua:** já feita — 0006 e 0013 aplicadas e confirmadas (ver item 2). A pendência que resta (migration 0014) é sobre o convite de beta, não sobre este formulário.
 
 ---
 
@@ -149,7 +151,7 @@ Toda mensagem de erro mostrada ao usuário (nas 3 rotas de API e em todas as Ser
 
 ## Resumo — o que precisa da sua ação, fora do código
 
-1. **Aplicar 4 migrations pendentes no Supabase**, na ordem: `0006_lista_fundadoras.sql`, `0011_perfil_corredor.sql`, `0012_endurecer_funcoes_convite.sql`, `0013_endurecer_lista_fundadoras.sql`. Sem isso, o formulário de e-mail continua fora do ar e as 2 correções críticas de segurança (itens 2 e 4) não entram em vigor no banco de dados real. (Cole o conteúdo de cada arquivo, um de cada vez, no SQL Editor do painel do Supabase.)
+1. ~~Aplicar as migrations `0006`, `0011`, `0012`, `0013`~~ — feito, confirmado por mim contra o banco real. **Falta aplicar mais uma: `0014_corrigir_revoke_funcoes_definer.sql`** — descobri, testando a 0012 já aplicada, que ela não tinha bloqueado nada de verdade (explicado no item 2 acima); a 0014 é a correção de verdade. Cole o conteúdo dela no SQL Editor do Supabase, igual fez com as outras.
 2. **Depois de navegar pelo site em produção e confirmar que não aparece nenhum aviso de bloqueio no console do navegador**, trocar `Content-Security-Policy-Report-Only` por `Content-Security-Policy` em `next.config.ts` (ou me pedir pra fazer essa troca depois de você confirmar).
 3. **Ativar o Dependabot** nas configurações do repositório no GitHub (Settings → Code security and analysis).
 4. Nenhuma chave precisa ser trocada — não encontrei nenhum segredo exposto em lugar nenhum, nem no código atual, nem no histórico do git.
@@ -158,9 +160,9 @@ Toda mensagem de erro mostrada ao usuário (nas 3 rotas de API e em todas as Ser
 
 | Severidade | Item | Status |
 |---|---|---|
-| CRÍTICO | Funções de convite chamáveis direto pela chave pública (item 2) | Corrigido no código — precisa aplicar migration |
-| CRÍTICO | Formulário de e-mail gravava direto do navegador, sem validação/limite/honeypot reais (item 4) | Corrigido no código — precisa aplicar migration |
-| CRÍTICO | Força bruta de código de convite de beta sem limite de tentativas (item 4) | Corrigido no código |
+| CRÍTICO | Funções de convite chamáveis direto pela chave pública (item 2) | 1ª correção (0012) aplicada mas não funcionou de verdade — 2ª correção (0014) escrita, ainda precisa ser aplicada e confirmada |
+| CRÍTICO | Formulário de e-mail gravava direto do navegador, sem validação/limite/honeypot reais (item 4) | Corrigido e confirmado — migration 0013 aplicada, testei e o insert direto já não é mais aceito |
+| CRÍTICO | Força bruta de código de convite de beta sem limite de tentativas (item 4) | Corrigido no código (não depende de migration) |
 | IMPORTANTE | Nenhum cabeçalho de segurança/CSP existia (item 5) | Corrigido — CSP em modo aviso, aguardando sua confirmação pra ativar de vez |
 | MENOR | Dependabot não estava configurado (item 7) | Arquivo criado — precisa ativar no GitHub |
 | — | Itens 1, 3, 6, 8, 9 e a maior parte do item 2 | Já estavam corretos, nada precisou mudar |
