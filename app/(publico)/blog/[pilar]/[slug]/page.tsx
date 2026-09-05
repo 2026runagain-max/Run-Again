@@ -60,7 +60,7 @@ export default async function ArtigoPage({
       />
 
       <p className="font-sans text-sm text-mid">
-        <Link href="/blog" className="hover:underline">
+        <Link href="/" className="hover:underline">
           Blog
         </Link>{" "}
         /{" "}

@@ -22,8 +22,13 @@ export const navProfissional: NavItem[] = [
 
 // §4 do PRD "Site Aberto" — navegação do header público (deslogado), à
 // esquerda dos CTAs de conversão.
+//
+// Reestruturação de navegação (decisão de produto, 2026-09): "Blog" saiu
+// desta lista porque o blog virou a própria home (/) — a logo do header já
+// linka pra lá, repetir como item de nav ao lado seria redundante. Ordem
+// dos itens restantes é a definida pela tarefa: Run Explica · Método ·
+// Sobre (Run Again Materiais e Entrar são renderizados à parte no Header).
 export const navPublico: NavItem[] = [
-  { label: "Blog", href: "/blog" },
   { label: "Run Explica", href: "/explica" },
   { label: "Método", href: "/metodo" },
   { label: "Sobre", href: "/sobre" },

@@ -5,16 +5,22 @@ import { Card } from "@/components/ui/Card";
 import { PillarCard } from "@/components/marketing/PillarCard";
 import { ListaFundadorasForm } from "@/components/marketing/ListaFundadorasForm";
 import { CartaoConversao } from "@/components/marketing/CartaoConversao";
+import { EmptyState } from "@/components/estados/EmptyState";
 import { pilaresProduto } from "@/lib/site/pilares-produto";
 import { fundadores, fechamentoQuemSomos } from "@/lib/site/fundadores";
+import { pilaresBlog } from "@/lib/blog/pilares";
+import { getDestaques } from "@/lib/blog/content";
 
-// Copy exata de copy/home-lista-fundadoras.md — não parafraseada, não
-// resumida (regra da TAREFA, item 1). Ver PR para o "ANTES vs. DEPOIS" com
-// o texto que estava no ar antes desta substituição.
+// Reestruturação de navegação (decisão de produto, 2026-09): o blog vira a
+// home de quem não está logado — esta página reúne o que antes vivia
+// separado em / (lista de fundadores) e /blog (conteúdo). Nenhuma frase foi
+// reescrita ou resumida nas duas fontes — só reordenadas numa página só.
+// /blog agora só redireciona pra cá (app/(publico)/blog/page.tsx), pra não
+// quebrar link já compartilhado.
 export const metadata: Metadata = {
   title: "Run Again — Volte a correr forte, sem se machucar de novo",
   description:
-    "O primeiro ecossistema que junta treino, nutrição e psicologia do esporte numa jornada só. Entre na lista de fundadores.",
+    "Conteúdo, ciência e a lista de fundadores do Run Again — o primeiro ecossistema que junta treino, nutrição e psicologia do esporte numa jornada só.",
 };
 
 const beneficios = [
@@ -101,6 +107,8 @@ const faq = [
 ];
 
 export default function LandingPage() {
+  const destaques = getDestaques();
+
   return (
     <>
       {/* 1. Hero */}
@@ -235,6 +243,54 @@ export default function LandingPage() {
                 descricao={pilar.descricaoCurta}
                 className="w-full sm:w-[calc((100%-1.25rem)/2)] lg:w-[calc((100%-2.5rem)/3)]"
               />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5b. Blog — antes vivia isolado em /blog, agora é parte da home
+          (decisão de produto, reestruturação de navegação 2026-09). Mesmo
+          conteúdo/copy de app/(publico)/blog/page.tsx, sem parafrasear. */}
+      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+        <Eyebrow>Destaques</Eyebrow>
+        <h2 className="mt-2 font-display text-2xl text-ink sm:text-3xl">
+          O que ler primeiro
+        </h2>
+
+        {destaques.length === 0 ? (
+          <EmptyState
+            className="mt-6"
+            subtitulo="Ainda estamos publicando os primeiros artigos. Enquanto isso, explora os pilares abaixo ou entra na lista de fundadores pra saber quando sair o primeiro."
+          />
+        ) : (
+          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            {destaques.map((artigo) => (
+              <Link key={`${artigo.pilar}/${artigo.slug}`} href={`/blog/${artigo.pilar}/${artigo.slug}`}>
+                <Card variant="pillar" className="flex h-full flex-col gap-2 transition-shadow hover:shadow-md">
+                  <h3 className="font-display text-xl text-ink">{artigo.titulo}</h3>
+                  <p className="text-sm font-sans text-mid">{artigo.resumo}</p>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className="bg-paper px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-5xl">
+          <Eyebrow>Navegue por pilar</Eyebrow>
+          <h2 className="mt-2 font-display text-2xl text-ink sm:text-3xl">
+            Escolha o assunto
+          </h2>
+
+          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {pilaresBlog.map((pilar) => (
+              <Link key={pilar.slug} href={`/blog/${pilar.slug}`}>
+                <Card variant="pillar" className="flex h-full flex-col gap-2 transition-shadow hover:shadow-md">
+                  <h3 className="font-display text-xl text-ink">{pilar.nome}</h3>
+                  <p className="text-sm font-sans text-mid">{pilar.descricao}</p>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>

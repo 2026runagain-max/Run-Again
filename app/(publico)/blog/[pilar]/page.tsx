@@ -40,7 +40,7 @@ export default async function BlogPilarPage({
   return (
     <main className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
       <p className="font-sans text-sm text-mid">
-        <Link href="/blog" className="hover:underline">
+        <Link href="/" className="hover:underline">
           Blog
         </Link>{" "}
         / {pilar.nome}
